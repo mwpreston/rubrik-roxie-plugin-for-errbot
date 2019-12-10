@@ -19,10 +19,13 @@ Here are some resources to get you started! If you find any challenges from this
 
 There are a few services you'll need in order to get this project off the ground:
 
-* [Errbot](https://errbot.readthedocs.io/en/latest/) - without an actual Errbot installation we can't do much with a plugin :tongue
+* [Errbot](https://errbot.readthedocs.io/en/latest/) - without an actual Errbot installation we can't do much with a plugin
 * Rubrik CDM 4.0 or later - the platform that protects provisioned workloads
 
-Depending on the chat/colloboration platform you intend to use additional plugins or connectors may be required.
+Depending on the chat/colloboration platform you intend to use additional plugins or connectors may be required. For example, using the Roxie Plugin for Errbot with Mattermost additionaly requires:
+
+* [Mattermost](https://mattermost.com/) - High Trust Messaging for the Enterprise
+* [Errbot Backend for Mattermost](https://github.com/Vaelor/errbot-mattermost-backend) - Connects Mattermost to Errbot
 
 ## :muscle: How You Can Help
 
