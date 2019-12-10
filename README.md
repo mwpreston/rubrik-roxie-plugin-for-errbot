@@ -19,7 +19,7 @@ Here are some resources to get you started! If you find any challenges from this
 
 There are a few services you'll need in order to get this project off the ground:
 
-* [Errbot](https://errbot.readthedocs.io/en/latest/) - without an actual Errbot installation we can't do much with a plugin :)
+* [Errbot](https://errbot.readthedocs.io/en/latest/) - without an actual Errbot installation we can't do much with a plugin :shrug
 * Rubrik CDM 4.0 or later - the platform that protects provisioned workloads
 
 ## :muscle: How You Can Help
