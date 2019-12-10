@@ -12,19 +12,21 @@ The Rubrik Plugin for Errbot will interpret the natural conversation and peform 
 
 Here are some resources to get you started! If you find any challenges from this project are not properly documented or are unclear, please raise an issueand let us know! This is a fun, safe environment - don't worry if you're a GitHub newbie! :heart:
 
-* [Quick Start Guide](/docs/quick-start.md)
+* [Quick Start Guide - Roxie, Errbot, and Mattermost](/docs/quick-start.md)
 * [Rubrik API Documentation](https://github.com/rubrikinc/api-documentation)
 
 # :white_check_mark: Prerequisites
 
 There are a few services you'll need in order to get this project off the ground:
 
-* [Errbot](https://errbot.readthedocs.io/en/latest/) - without an actual Errbot installation we can't do much with a plugin :shrug
+* [Errbot](https://errbot.readthedocs.io/en/latest/) - without an actual Errbot installation we can't do much with a plugin :tongue
 * Rubrik CDM 4.0 or later - the platform that protects provisioned workloads
+
+Depending on the chat/colloboration platform you intend to use additional plugins or connectors may be required.
 
 ## :muscle: How You Can Help
 
-We glady welcome contributions from the community. From updating the documentation to requesting additional ARM templates, all ideas are welcome. Thank you in advance for all of your issues, pull requests, and comments! :star:
+We glady welcome contributions from the community. From updating the documentation to providing additional functionality, all ideas are welcome. Thank you in advance for all of your issues, pull requests, and comments! :star:
 
 * [Contributing Guide](CONTRIBUTING.md)
 * [Code of Conduct](CODE_OF_CONDUCT.md)
