@@ -18,6 +18,7 @@ The following software packages are prerequisites in order to support the Roxie 
 
 1. Python3
 1. virtualenv
+1. git
 
 
 # Installation
@@ -36,15 +37,19 @@ Installation can be performed in two different manners; Automated or Manual, out
 
 ## Automated Installation
 
-For convenience we have developed a script which will automate all of the actions performed in the Manual Installation section. To run an automated installation use the following steps:
+For convenience we have developed a script which will automate all of the actions performed in the Manual Installation section. **Note** The automated installation only works when you wish to install all components on the same server which runs Mattermost.
+
+To run an automated installation use the following steps:
 
 1. Download the automated script [here](/install/install.sh)
-1. Execute the script
-1. Walk through script once its built.
+1. Execute the script by running `./install.sh`
+1. The script will prompt for various bits of information including installation directories, Mattermost configuration, and Bot configuration. Be sure to input everything correctly when prompted.
+1. Upon completion, Errbot, Mattermost Backend for Errbot, MattermostDriver, and the Rubrik Roxie Plugin for Errbot will be installed.
+1. Before you can begin using Roxie, the plugin will need to be configured to point to your cluster and supplied an administrative API token. More details around this can be found in the [`Configuring the Rubrik Plugin for Errbot`](#markdown-header-Configuring-the-Rubrik-Plugin-for-Errbot) section.
 
 ## Manual installation
 
-The manual installation process can be broken down into three  subsections; Installing Errbot, Installing the Rubrik Plugin for Errbot, and Installing the Mattermost Backend for Errbot
+The manual installation process can be broken down into three subsections; Installing Errbot, Installing the Rubrik Plugin for Errbot, and Installing the Mattermost Backend for Errbot
 
 ### Installing Errbot
 The first step to creating our Roxie bot involves getting Errbot installed, configured, and running. While package managers may be used for certain Linux distrobutions, the following will walk through the more prefered installation method using virtualenv:
@@ -73,6 +78,8 @@ The first step to creating our Roxie bot involves getting Errbot installed, conf
 
     `errbot --init`
 
+### Installing the Rubrik Plugin for Errbot 
+
 1. Download the Rubrik Roxie Plugin for Errbot
 
     `git clone https://github.com/mwpreston/rubrik-roxie-plugin-for-errbot.git /tmp/rubrik-roxie`
@@ -95,7 +102,7 @@ To confirm that the Rubrik Plugin for Errbot has been successfully loaded issue 
 
 While the plugin is activated we still cannot use it to query our Rubrik clusters. We must first configure the plugin with our desired authentication and target settings.
 
-**Installation of the mattermostdriver and Errbot for Mattermost Backend**
+### Installation of the mattermostdriver and Errbot for Mattermost Backend
 
 In order for Mattermost to talk to Errbot and vice-versa we have to connect the two application utilizing a backend. A backend is simply a connector which leverages web hooks allowing communication to flow between Mattermost and Errbot. The following steps outline the installation and configuration for both the mattermostdriver and the backend:
 
@@ -177,7 +184,7 @@ In order for Mattermost to talk to Errbot and vice-versa we have to connect the 
     export PYTHONPATH=/usr/share/errbot-mattermost-backend:$PYTHONPATH
     ```
 
-## Running the Errbot instance
+### Running the Errbot instance
 
 The Errbot instance, Mattermost Backend and Rubrik plugin are now ready to be executed. To start Errbot with our desired configuration run the following command:
 
@@ -187,7 +194,7 @@ If following along with this guide, the command would look as follows:
 
 `source /usr/share/errbot-core/bin/activate && /usr/share/errbot-core/bin/errbot -c /usr/share/errbot-mattermost/config.py`
 
-### 
+### Configuring the Rubrik Plugin for Errbot
 
 ## Default Intents
 
