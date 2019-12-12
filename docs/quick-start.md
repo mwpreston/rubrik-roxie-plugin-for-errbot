@@ -72,7 +72,7 @@ The first step to creating our Roxie bot involves getting Errbot installed, conf
 
 1. Create and switch to a directory to host the errbot instance.
 
-    `mkdir /usr/share/errbot-mattermost && cd /usr/share/errbot-mattermost`
+    `mkdir /usr/share/errbot-roxie && cd /usr/share/errbot-roxie`
 
 1. Initialize the directory for Errbot. This will copy the nessessary files, as well as a default configuration file to our working directory
 
@@ -86,7 +86,7 @@ The first step to creating our Roxie bot involves getting Errbot installed, conf
 
 1. Copy the Rubrik Plugin for Errbot to the working directory
 
-    `cp -r /tmp/rubrik-roxie/rubrik-errbot/rubrik /usr/share/errbot-mattermost/plugins/`
+    `cp -r /tmp/rubrik-roxie/rubrik-errbot/rubrik /usr/share/errbot-roxie/plugins/`
 
 Errbot and the Rubrik Plugin for Errbot have now been successfully installed. We can quickly test the installations by running the `errbot` command from within our working directory as follows:
 
@@ -100,7 +100,7 @@ To confirm that the Rubrik Plugin for Errbot has been successfully loaded issue 
 
 ![](img/rubrik-plugin-status.png)
 
-While the plugin is activated we still cannot use it to query our Rubrik clusters. We must first configure the plugin with our desired authentication and target settings.
+This mearly ensures that our plugin is working. Configuration still needs to occur before it is able to connect to a Rubrik cluster. Before that however, the next step is to get Errbot talking to Mattermost.
 
 ### Installation of the mattermostdriver and Errbot for Mattermost Backend
 
@@ -122,7 +122,7 @@ In order for Mattermost to talk to Errbot and vice-versa we have to connect the 
 
     **Optionally you may use the `Invite People` option from the main menu within your Teams Mattermost space.
 
-1.  Modify the `config.py` configuration file within the working directory (/usr/share/errbot-mattermost if following along), pointing it to the mattermost backend and configuring the bot.
+1.  Modify the `config.py` configuration file within the working directory (/usr/share/errbot-roxie if following along), pointing it to the mattermost backend and configuring the bot.
 
     For example, we want to change the default `config.py` which looks something like this...
     
@@ -184,26 +184,37 @@ In order for Mattermost to talk to Errbot and vice-versa we have to connect the 
     export PYTHONPATH=/usr/share/errbot-mattermost-backend:$PYTHONPATH
     ```
 
+We have now completed all of the installations required and can begin to run our Errbot instance.
+
 ### Running the Errbot instance
 
-The Errbot instance, Mattermost Backend and Rubrik plugin are now ready to be executed. To start Errbot with our desired configuration run the following command:
+The Errbot instance, Mattermost Backend and Rubrik plugin are now ready to be started. To start Errbot with our desired configuration run the following command:
 
-`source <path_to_errbot_install>/bin/activate && <path_to_working_directory>/config.py`
+`source <path_to_errbot_install>/bin/activate && <path_to_errbot_install>/bin/errbot -c <path_to_working_directory>/config.py`
 
 If following along with this guide, the command would look as follows:
 
-`source /usr/share/errbot-core/bin/activate && /usr/share/errbot-core/bin/errbot -c /usr/share/errbot-mattermost/config.py`
+`source /usr/share/errbot-core/bin/activate && /usr/share/errbot-core/bin/errbot -c /usr/share/errbot-roxie/config.py`
 
-### Configuring the Rubrik Plugin for Errbot
+#### Configuring Errbot and Roxie to start on system boot
 
-## Default Intents
+# Configuring the Rubrik Plugin for Errbot
 
-## Creating new intents
+TODO
+
+# Code Review
+
+TODO
+
+## Creating new functions
+
+TODO
 
 # Further Reading
 
-* [Rubrik PowerShell SDK GitHub Repository](https://github.com/rubrikinc/rubrik-sdk-for-powershell)
-* [Rubrik PowerShell SDK Official Documentation](http://rubrikinc.github.io/rubrik-sdk-for-powershell/)
-* [Rubrik CDM API Documentation (v1)](https://rubrikinc.github.io/api-doc-v1/)
-* [Rubrik CDM API Documentation (internal)](https://rubrikinc.github.io/api-doc-internal/)
-* [Get-Started with the Rubrik PowerShell Module](https://www.rubrik.com/blog/get-started-rubrik-powershell-module/)
+TODO
+
+* Errbot Documentation
+* Mattermost Documentation
+* Rubrik API Documentation
+
