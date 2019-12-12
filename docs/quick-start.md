@@ -38,7 +38,7 @@ Installation can be performed in two different manners; Automated or Manual, out
 
 For convenience we have developed a script which will automate all of the actions performed in the Manual Installation section. To run an automated installation use the following steps:
 
-1. Download the automated script [here](https://download.com)
+1. Download the automated script [here](/install/install.sh)
 1. Execute the script
 1. Walk through script once its built.
 
