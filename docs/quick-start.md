@@ -45,7 +45,7 @@ To run an automated installation use the following steps:
 1. Execute the script by running `./install.sh`
 1. The script will prompt for various bits of information including installation directories, Mattermost configuration, and Bot configuration. Be sure to input everything correctly when prompted.
 1. Upon completion, Errbot, Mattermost Backend for Errbot, MattermostDriver, and the Rubrik Roxie Plugin for Errbot will be installed.
-1. Before you can begin using Roxie, the plugin will need to be configured to point to your cluster and supplied an administrative API token. More details around this can be found in the [`Configuring the Rubrik Plugin for Errbot`](#markdown-header-Configuring-the-Rubrik-Plugin-for-Errbot) section.
+1. Before you can begin using Roxie, the plugin will need to be configured to point to your cluster and supplied an administrative API token. More details around this can be found in the [`Configuring the Rubrik Plugin for Errbot`](#Configuring-the-Rubrik-Plugin-for-Errbot) section.
 
 ## Manual installation
 
