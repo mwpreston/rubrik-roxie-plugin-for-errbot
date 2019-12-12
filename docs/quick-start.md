@@ -1,346 +1,197 @@
-# Introduction to the Rubrik SDK for PowerShell
+# Introduction to the Rubrik Roxie Plugin for Errbot
 
-Rubrik's API first architecture enables organizations to embrace and integrate Rubrik functionality into their existing automation processes. While Rubrik APIs can be consumed natively, companies are at various stages in their automation journey with different levels of automation knowledge on staff. The Rubrik SDK for PowerShell is a project that provides a Microsoft PowerShell module for managing and monitoring Rubrik's Cloud Data Management fabric by way of published RESTful APIs. If you are looking to perform interactive automation, set up scheduled tasks, leverage an orchestration engine, or need ad-hoc operations, this module will be be valuable to your needs.
+Errbot is a python based chatbot that connects to your favorite chat service and brings your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant into the fold. Utilizing the Roxie Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collobaration platforms, granting end-users to chat or query the plugin in order to perform functions through simple conversation such as:
+
+- Assigning an SLA Domain to a Rubrik object
+- Taking an on-demand snapshot of a Virtual Machine
+- Performing a Live Mount of a Virtual Machine
+
+The Rubrik Plugin for Errbot will interpret the natural conversation and peform the respective API calls to a Rubrik cluster in order to perform the requested functionality, while responding back to the users within the chat service.
+
+*Note: While Errbot can be utilized on it's own, the real power comes when it is accessed through a bot within a chat service. This guide will walk through the process of setting up Errbot and Roxie with Mattermost, an on-premises open source chat service. While this guide focuses on Mattermost, modifications could be made in order to make this work with Slack as well ??? MWP - Need to word better.*
 
 # Prerequisites
 
-The code assumes that you have already deployed at least one Rubrik cluster into your environment and have completed the initial configuration process to form a cluster. At a minimum, make sure you have installed the following:
+The code assumes that you have already deployed at least one Rubrik cluster into your environment and have completed the initial configuration process to form a cluster. This code also assumes that Mattermost, the chat service Errbot will connect to, has been downloaded and configured properly.
 
-1. [PowerShell](https://aka.ms/getps6) Core or Windows PowerShell
-1. [PowerCLI](http://www.vmware.com/go/powercli) version 6.0 or higher
+The following software packages are prerequisites in order to support the Roxie Plugin for Errbot and Mattermost. 
 
-## Note - PowerShell Core
+1. Python3
+1. virtualenv
 
-*The module has been written with PowerShell Core support in mind. For best performance and compatibility, the most recent release of PowerShell Core is recommended with the Rubrik PowerShell Module.*
 
 # Installation
 
-The Rubrik SDK for PowerShell project contains a folder named [Rubrik](https://github.com/rubrikinc/PowerShell-Module/tree/master/Rubrik). The folder needs to be installed into one of your PowerShell Module Paths using one of the installation options outlined below. To see the full list of available PowerShell Module paths, use `$env:PSModulePath.split(';')` in a PowerShell console.
+This guide will walk through the bare minimum steps in order to get Errbot and the Rubrik Plugin for Errbot installed, configured, and connected to a Mattermost instance. For further information and more detailed installation instructions, refer to the [Official Errbot Documentation]().
 
-Common PowerShell module paths include:
+After completing this guide the following applications and packages will be installed:
 
-1. Current User: `%USERPROFILE%\Documents\WindowsPowerShell\Modules\`
-1. All Users: `%ProgramFiles%\WindowsPowerShell\Modules\`
-1. OneDrive: `$env:OneDrive\Documents\WindowsPowerShell\Modules\`
+1. Errbot
+1. mattermostdriver
+1. Mattermost Backend for Errbot
+1. Rubrik Python SDK
+1. Roxie Plugin for Mattermost
 
-## Option 1: PowerShell Gallery (Recommended)
+Installation can be performed in two different manners; Automated or Manual, outlined below.
 
-1. Ensure you have the [Windows Management Framework 5.0](htps://www.microsoft.com/en-us/download/details.aspx?id=50395) or greater installed.
-1. Open a Powershell console with the Run as Administrator option.
-1. Run `Set-ExecutionPolicy` using the parameter RemoteSigned or Bypass.
-1. Run `Install-Module -Name Rubrik -Scope CurrentUser` to download the module from the PowerShell Gallery. Note that the first time you install from the remote repository it may ask you to first trust the repository.
-1. Alternatively `Install-Module -Name Rubrik -Scope AllUsers` can be execute be used if you would like to install the module for all users on the current system.
+## Automated Installation
 
-## Option 2: Installer Script
+For convenience we have developed a script which will automate all of the actions performed in the Manual Installation section. To run an automated installation use the following steps:
 
-1. Download the [master branch](https://github.com/rubrikinc/PowerShell-Module) to your workstation.
-1. Open a Powershell console with the _Run as Administrator_ option.
-1. Run `Set-ExecutionPolicy` using the parameter _RemoteSigned_ or _Bypass_.
-1. Run the `Install-Rubrik.ps1` script in the root of this repository and follow the prompts to install, upgrade, or delete your Rubrik Module contents.
+1. Download the automated script [here](https://download.com)
+1. Execute the script
+1. Walk through script once its built.
 
-## Option 3: Manual Installation
+## Manual installation
 
-1. Download the [master branch](https://github.com/rubrikinc/PowerShell-Module) to your workstation.
-1. Copy the contents of the Rubrik folder onto your workstation into the desired PowerShell Module path.
-1. Open a Powershell console with the _Run as Administrator_ option.
-1. Run `Set-ExecutionPolicy` using the argument _RemoteSigned_ or _Bypass_.
+The manual installation process can be broken down into three  subsections; Installing Errbot, Installing the Rubrik Plugin for Errbot, and Installing the Mattermost Backend for Errbot
 
-## Options 4: Download Module from PowerShell Gallery for redistribution
+### Installing Errbot
+The first step to creating our Roxie bot involves getting Errbot installed, configured, and running. While package managers may be used for certain Linux distrobutions, the following will walk through the more prefered installation method using virtualenv:
 
-1. Navigate to [PowerShell Gallery - Rubrik](https://www.powershellgallery.com/packages/Rubrik)
-1. Click Manual Download.
-1. Click Download the raw nupkg file.
-   1. To directly use the module, the .nupkg file can be extracted on the destination system. Be sure the place the files in PSModulePath to allow for automatic loading.
-   1. Alternatively, this file can be imported in a local nupkg repository for further distribution
+1. Create a new python3 based virtual environment
 
-## Verification
+    `virtualenv --python ``which python3`` /usr/share/errbot-core`
 
-PowerShell will create a folder for each new version of any module you install. It's a good idea to check and see what version(s) you have installed and running in the session. To begin, let's see what versions of the Rubrik Module are installed:
+1. Install Errbot using pip
 
-``` PowerShell
-Get-Module -ListAvailable -Name Rubrik
-```
+    `/usr/share/errbot-core/bin/pip install errbot`
 
-The `-ListAvailable` switch will pull up all installed versions from any path found in `$env:PSModulePath`. Check to make sure the version you wanted is installed. You can safely remove old versions, if desired.
+1. Install the Rubrik Python SDK
 
-To see which version is currently loaded, use:
+    `/usr/share/errbot-core/bin/pip install rubrik_cdm`
 
-``` PowerShell
-Get-Module Rubrik
-```
+1. Activate the virtualenv
 
-If nothing is returned, you need to first load the module by using:
+    `source /usr/share/errbot-core/bin/activate`
 
-``` PowerShell
-Import-Module Rubrik
-```
+1. Create and switch to a directory to host the errbot instance.
 
-If you wish to load a specific version, use:
+    `mkdir /usr/share/errbot-mattermost && cd /usr/share/errbot-mattermost`
 
-``` PowerShell
-Import-Module Rubrik -RequiredVersion #.#.#.#
-```
+1. Initialize the directory for Errbot. This will copy the nessessary files, as well as a default configuration file to our working directory
 
-Where "#.#.#.#" represents the version number.
+    `errbot --init`
 
-# Authentication
+1. Download the Rubrik Roxie Plugin for Errbot
 
-The Rubrik SDK for PowerShell provides two mechanisms for supplying credentials to the `Connect-Rubrik` function. A combination of username and password or a credential object. Credentials in the credential object may be entered manually or provided as an object.
+    `git clone https://github.com/mwpreston/rubrik-roxie-plugin-for-errbot.git /tmp/rubrik-roxie`
 
-#### Authenticate by Providing Username and Password
+1. Copy the Rubrik Plugin for Errbot to the working directory
 
-To authenticate with your Rubrik cluster you can make use of the `-UserName` and `-Password` parameters.
+    `cp -r /tmp/rubrik-roxie/rubrik-errbot/rubrik /usr/share/errbot-mattermost/plugins/`
 
-#### Authenticate by providing credential object
+Errbot and the Rubrik Plugin for Errbot have now been successfully installed. We can quickly test the installations by running the `errbot` command from within our working directory as follows:
 
-It is also possible to store your credentials in a credential object by using the built-in Get-Credential cmdlet. To store your credentials in a variable, the following sample can be used:
+![](img/errbot-run.png)
 
-``` PowerShell
-$Credential = Get-Credential
-```
+Errbot will now be started in text/developer mode. Here we can test that Errbot is responding by issuing the `!tryme` command, which in turn calls an example plugin which was loaded during the `errbot --init` process. A succesful Errbot installation will respond with 'It works !' as shown below:
 
-PowerShell will prompt for the UserName and Password and the credentials will be securely stored in the `$Credential` variable. This variable can now be used to authenticate against the Rubrik Cluster in by running the following code:
+![](img/2019-12-11-11-45-19.png)
 
-``` PowerShell
-Connect-Rubrik -Server yourip -Credential $Credential
-```
+To confirm that the Rubrik Plugin for Errbot has been successfully loaded issue the `!status plugins` command and search for the Rubrik plugin. A properly working pluging will have an 'A' displayed for its status to indicate it has been activated. The following illustrates a properly function Rubrik plugin:
 
-Using credential objects can reduce the amount of time you have to enter your username and password.
+![](img/rubrik-plugin-status.png)
 
-# Interacting with Rubrik
+While the plugin is activated we still cannot use it to query our Rubrik clusters. We must first configure the plugin with our desired authentication and target settings.
 
-Now that you have the Rubrik module installed on your workstation, here are a few beginner commands that you can explore to feel comfortable with the available functions.
+**Installation of the mattermostdriver and Errbot for Mattermost Backend**
 
-## Connecting to the Rubrik Cluster
+In order for Mattermost to talk to Errbot and vice-versa we have to connect the two application utilizing a backend. A backend is simply a connector which leverages web hooks allowing communication to flow between Mattermost and Errbot. The following steps outline the installation and configuration for both the mattermostdriver and the backend:
 
-To begin, connect to a Rubrik cluster. To keep things simple, we'll do the first command without any supplied parameters.
+1. Install the mattermostdriver packages through pip. **Ensure the virtualenv for Errbot is still active**
 
-* Open a PowerShell session
-* Type `Connect-Rubrik` and press enter.
+    `/usr/share/errbot-core/bin/pip install mattermostdriver`
 
-A prompt will appear asking you for a server. Enter the IP address or fully qualified domain name (FQDN) of any node in the cluster. An additional prompt will appear asking for your user credentials. Once entered, you will see details about the newly created connection.
+1. Clone the Errbot Backend for Mattermost to a desired directory
 
-![alt text](/docs/img/image1.png)
+    `git clone https://github.com/Vaelor/errbot-mattermost-backend.git`
 
-At this point, you are authenticated and ready to begin issuing commands to the cluster. This token will be valid for the duration of the PowerShell session. If you close your PowerShell console or open an additional console you will have to re-authenticate using the `Connect-Rubrik` function.
+1. Use the Mattermost CLI to create a user to use as your bot. The user must be assigned the system admin role.  We like to call ours Roxie
 
-## Commands and Help
+    `/opt/mattermost/bin/mattermost user create --email roxie@rubrik.us --username roxie --password SuperSecret123! --system_admin`
 
-What if we didn't know that `Connect-Rubrik` exists? To see a list of all available commands, type in `Get-Command -Module Rubrik`. This will display a list of every function available in the module. Note that all commands are in the format of **Verb-RubrikNoun**. This has two benefits:
+    ![](img/user-create-cli.png)
 
-* Adheres to the Microsoft requirements for PowerShell functions.
-* Use of "Rubrik" in the name avoids collisions with anyone else's commands.
+    **Optionally you may use the `Invite People` option from the main menu within your Teams Mattermost space.
 
-For details on a command, use the PowerShell help command `Get-Help`. For example, to get help on the `Connect-Rubrik` function, use the following command:
+1.  Modify the `config.py` configuration file within the working directory (/usr/share/errbot-mattermost if following along), pointing it to the mattermost backend and configuring the bot.
 
-``` PowerShell
-Get-Help Connect-Rubrik
-```
+    For example, we want to change the default `config.py` which looks something like this...
+    
+    ```
+    import logging
 
-![alt text](/docs/img/image2.png)
-
-This will display a description about the command. For details and examples, use the `-Full` parameter on the end.
-
-``` PowerShell
-Get-Help Connect-Rubrik -Full
-```
-
-![alt text](/docs/img/image3.png)
-
-As this is a lot of help to process, the help function can be used instead of Get-Help, to get scrolling output.
-
-``` PowerShell
-help Connect-Rubrik -Full
-```
-
-![alt text](/docs/img/image4.png)
-
-## Gathering Data
-
-Let's get information on the cluster. The use of any command beginning with the word get is safe to use. No data will be modified, so these are good commands to use if this is your first time using PowerShell.
-
-We'll start by looking up the version running on the Rubrik cluster. Enter the command below and press enter:
-
-``` PowerShell
-Get-RubrikVersion
-```
-
-![alt text](/docs/img/image5.png)
-
-The result is fairly simple: the command will output the cluster's code version. How about something a bit more complex? Try getting all of the SLA Domain details from the cluster. Here's the command:
-
-``` PowerShell
-Get-RubrikSLA
-```
-
-![alt text](/docs/img/image6.png)
-
-A lot of stuff should be scrolling across the screen. You're seeing details on every SLA Domain known by the cluster at a very detailed level. If you want to see just one SLA Domain, tell the command to limit the results. You can do this by using a parameter. Parameters are ways to control a function. Try it with this example:.
-
-``` PowerShell
-Get-RubrikSLA -SLA 'Gold'
-```
-
-![alt text](/docs/img/image7.png)
-
-The `-SLA` portion is a parameter and "Gold" is a value for the parameter. This effectively asks the function to limit results to one SLA Domain: Gold. Easy, right?
-
-For a full list of available parameters and examples, use `Get-Help Get-RubrikSLA -Full`. Every Rubrik command has native help available.
-
-## Modifying Data
-
-Not every command will be about gathering data. Sometimes you'll want to modify or delete data, too. The process is nearly the same, although some safeguards have been implemented to protect against errant modifications. Let's start with an simple one.
-
-This example works best if you have a test virtual machine that you are not concerned with changes being made to it. Make sure that virtual machine is visible to the Rubrik cluster. To validate this, use the following command:
-
-``` PowerShell
-Get-RubrikVM -VM "JBrasser-Win"
-```
-
-![alt text](/docs/img/image8.png)
-
-Make sure to replace `"JBrasser-Win"` with the actual name of the virtual machine. If you received data back from Rubrik, you can be sure that this virtual machine is known to the cluster and can be modified.
-
-### Note - Quoting Rules
-
-*The double quotes, or single quotes, are required if your virtual machine has any spaces in the name. It's generally considered a good habit to always use quotes around the name of objects.*
-
-Let's protect this virtual machine with the "Gold" SLA Domain. To do this, use the following command:
-
-``` PowerShell
-Get-RubrikVM -VM 'Name' | Protect-RubrikVM -SLA 'Gold'
-```
-
-Before the change is made, a prompt will appear asking you to confirm the change.
-
-![alt text](/docs/img/image9.png)
-
-This is a safeguard. You can either take the default action of "Yes" by pressing enter, or type "N" if you entered the wrong name or changed your mind. If you want to skip the confirmation check all together, use the `-Confirm:$false` parameter like this:
-
-``` PowerShell
-Get-RubrikVM -VM 'Name' | Protect-RubrikVM -SLA 'Gold' -Confirm:$false
-```
-
-This will make the change without asking for confirmation. Be careful!
-
-Additionally, it is also possible to either set the confirmation preference for an individual cmdlet or function by changing the default parameters and arguments:
-
-``` PowerShell
-$PSDefaultParameterValues = @{"Rubrik\Protect-RubrikVM:Confirm" = $false}
-```
-
-![alt text](/docs/img/image10.png)
-
-By setting this, for the duration of your current PowerShell session, `Protect-RubrikVM` will no longer prompt for confirmation.
-
-## Gather data for reporting
-
-If we want to know the status of backups for certain workloads or SLAs we can easily gather this data using the PowerShell module.
-
-``` PowerShell
-Get-RubrikVM -SLAID 'Gold'
-```
-
-We can use the SLAID parameter of Get-RubrikVM to only gather a list of VMs that are protected under the Gold SLA. If we want to have the number of VMs that are protected under the Gold SLA, we can use the `Measure-Object` cmdlet in PowerShell:
-
-``` PowerShell
-Get-RubrikVM -SLAID 'Gold' | Measure-Object
-```
-
-![alt text](/docs/img/image10.png)
-
-If we want to make this output readable, we could also choose to only display either the output or the count-property:
-
-``` PowerShell
-Get-RubrikVM -SLAID 'Gold' | Measure-Object | Select-Object -Property Count
-Get-RubrikVM -SLAID 'Gold' | Measure-Object | Select-Object -ExpandProperty Count
-```
-
-Alternatively we can also display all VMs that are protected by any SLA:
-
-``` PowerShell
-Get-RubrikVM | Where-Object {$_.EffectiveSlaDomainName -ne 'Unprotected'}
-```
-
-We use the PowerShell `Where-Object` cmdlet to filter out VMs that are not protected by SLAs. Now if we want to take this one step further, we can also make a generate a summary of all the number of VMs assigned to each SLA:
-
-``` PowerShell
-Get-RubrikVM | Where-Object {$_.EffectiveSlaDomainName -ne 'Unprotected'} |
-Group-Object -Property EffectiveSlaDomainName | Sort-Object -Property Count -Descending
-```
-
-![alt text](/docs/img/image14.png)
-
-We can use the `Group-Object` cmdlet to group objects together, by then piping this through to the `Sort-Object` cmdlet we can sort on the number of assigned workloads to each SLA. This can information can be used to directly query the system, without having to login to the Rubrik Cluster and retrieving this information from the interface.
-
-## Assign SLA based on source file
-
-In PowerShell we have the possibility to work data from different sources. In the following example we will use an external `.csv` file to assign Rubrik SLAs based on what is defined in the CSV file.
-
-In the first example we will use PowerShell to generate a `.csv` file for us:
-
-``` PowerShell
-1..25 | ForEach-Object {
-    [pscustomobject]@{
-        Name = "TestVM$_"
-        SLA  = ('Gold','Silver','Bronze' | Get-Random)
+    # This is a minimal configuration to get you started with the Text mode.
+    # If you want to connect Errbot to chat services, checkout
+    # the options in the more complete config-template.py from here:
+    # https://raw.githubusercontent.com/errbotio/errbot/master/errbot/config-template.py
+
+    BACKEND = 'Text'  # Errbot will start in text mode (console only mode) and will answer commands from there.
+
+    BOT_DATA_DIR = '/usr/share/errbot-mattermost/data'
+    BOT_EXTRA_PLUGIN_DIR = '/usr/share/errbot-mattermost/plugins'
+
+    BOT_LOG_FILE = '/usr/share/errbot-mattermost/errbot.log'
+    BOT_LOG_LEVEL = logging.DEBUG
+
+    BOT_ADMINS = ('@CHANGE_ME', )  # !! Don't leave that to "@CHANGE_ME" if you connect your errbot to a chat system !!
+    ```
+    
+    To this
+
+    ```
+    import logging
+
+    # This is a minimal configuration to get you started with the Text mode.
+    # If you want to connect Errbot to chat services, checkout
+    # the options in the more complete config-template.py from here:
+    # https://raw.githubusercontent.com/errbotio/errbot/master/errbot/config-template.py
+
+    BACKEND = 'Mattermost'  
+    BOT_EXTRA_BACKEND_DIR = '/usr/share/errbot-mattermost-backend' # This points where we cloned the Mattermost Backend
+    BOT_DATA_DIR = '/usr/share/errbot-mattermost/data' # This points to where we first initialized our Errbot instance
+    BOT_EXTRA_PLUGIN_DIR = '/usr/share/errbot-mattermost/plugins/' # This points to where we first initialized our Errbot instance
+    BOT_LOG_LEVEL = logging.DEBUG
+    BOT_LOG_FILE = '/usr/share/errbot-mattermost/errbot.log'
+
+    BOT_IDENTITY = {
+            # Required
+            'team': 'devrel',
+            'server': '10.10.15.26',
+            # For the login, either
+            'login': 'roxie@rubrik.us',
+            'password': 'SuperSecret123!',
+            # Optional
+            'insecure': True,
+            'scheme': 'http',
+            'port': 8065 # Default = 8065
     }
-} | Export-Csv -Path ./Example-SLA.csv -NoTypeInformation
-```
 
-![alt text](/docs/img/image11.png)
+    BOT_ADMINS = ('@admin', )  # !! Don't leave that to "@CHANGE_ME" if you connect your errbot to a chat system !!
+    ```
 
-If you have a spreadsheet application installed, we can now open this spreadsheet by running the following code:
+1. Add the following line to your virtualenv activate script(/usr/share/errbot-core/bin/activate if following along). This ensures the newly cloned Mattermost backend directory is part of the PYTHONPATH environment variable within the virtual environment.
 
-``` PowerShell
-Invoke-Item ./Example-SLA.csv
-```
+    ```
+    export PYTHONPATH=/usr/share/errbot-mattermost-backend:$PYTHONPATH
+    ```
 
-![alt text](/docs/img/image12.png)
+## Running the Errbot instance
 
-Now if we would like to make changes we can easily edit the `.csv` file. Once we have made the desired modifications, for example changes the SLAs for certain mission critical VMs to Gold, we can apply this configuration to our Rubrik Cluster:
+The Errbot instance, Mattermost Backend and Rubrik plugin are now ready to be executed. To start Errbot with our desired configuration run the following command:
 
-``` PowerShell
-Import-Csv -Path ./Example-SLA.csv | ForEach-Object {
-    Get-RubrikVM $_.Name | Protect-RubrikVM -SLA $_.SLA -Confirm:$false
-}
-```
+`source <path_to_errbot_install>/bin/activate && <path_to_working_directory>/config.py`
 
-## Making changes based on csv-input
+If following along with this guide, the command would look as follows:
 
-This code will change the SLAs for all the VMs that are listed in the .csv file, verify that want to make those changes to be made before running this against your Rubrik cluster. This is good practice in general, make sure you use the correct data source (the csv file in our example), that you target the right environment (the Rubrik Cluster) and finally make sure that your PowerShell code does what you expect it to do.
+`source /usr/share/errbot-core/bin/activate && /usr/share/errbot-core/bin/errbot -c /usr/share/errbot-mattermost/config.py`
 
-The advantage of using the PowerShell module to automate tasks such as assigning SLAs to specific machines should be apparent here. The alternative, doing this through the GUI, is a slower process and more error prone. A single miss-click means assigning the wrong SLA. By writing a script or putting together a couple of PowerShell code you can automate a task forever.
+### 
 
-# Building Your Own Commands
+## Default Intents
 
-The PowerShell SDK supports the majority of the functionality available within the Rubrik CDM. That said, the release cycles between the SDK and Rubrik CDM are not simultaneous. This means there may be times when new features or enhancements are added to the product but methods and functions to utilize them may be missing from the SDK.
-
-Links to the API documentation available online are available at the end of this Quick Start. If you currently have access to a Rubrik cluster you can browse to either of the following urls:
-
-[https://yourserver/docs/v1/playground/](https://yourserver/docs/v1/playground/)
-[https://yourserver/docs/internal/playground/](https://yourserver/docs/internal/playground/)
-
-## Sample Syntax
-
-In situations where the functions in the Rubrik SDK for PowerShell do not fulfill your specific use-case, it is possible to use the `InvokeRubrikRESTCall` function. The `Invoke-RubrikRESTCall` function, may be used to make native calls to Rubrik's RESTful API. The following syntax outlines a common piece of Rubrik functionality, assigning a VM to an SLA Domain, however, it does so by creating raw API requests to Rubrik CDM using the `Invoke-RubrikRESTCall` function
-
-``` PowerShell
-Invoke-RubrikRESTCall -Endpoint 'vmware/vm' -Method GET
-```
-
-Retrieve the raw output for all VMware VMs being managed by the Rubrik device. It is the most direct method of interacting with the Rubrik API that is found in this module.
-
-We can also create more complex commands, for example:
-
-``` PowerShell
-$body = New-Object -TypeName PSObject -Property @{'slaID'='INHERIT';'ForceFullSnapshot'='FALSE'}
-Invoke-RubrikRESTCall -Endpoint 'vmware/vm/VirtualMachine:::fbcb1f51-9520-4227-a68c-6fe145982f48-vm-649/snapshot' -Method POST -Body $body
-```
-
-This executes an on-demand snapshot for the VMware VM where the id is part of the endpoint.
-
-Rubrik prides itself upon its API-first architecture, ensuring everything available within the HTML5 interface, and more, is consumable via a RESTful API. For more information on Rubrik's API architecture and complete API documentation, please see the official Rubrik API Documentation.
+## Creating new intents
 
 # Further Reading
 

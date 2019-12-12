@@ -1,0 +1,9 @@
+[Core]
+Name = Rubrik
+Module = rubrik
+
+[Documentation]
+Description = This is Roxie - Rubrik's intellignent personal digital assitant.
+
+[Python]
+Version = 2+
