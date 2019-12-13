@@ -245,6 +245,25 @@ The Rubrik Plugin for Errbot will now start upon a reboot of the machine. Before
 
 # Configuring the Rubrik Plugin for Errbot
 
+Before issuing commands against a Rubrik cluster we need to configure the Node_IP and API_Token configuration elements within the Rubrik Plugin for Errbot. 
+
+Errbot plugins can be configured either by using the `errbot` cli command or through the bot itself.
+
+**NOTE: If the automated installation option was chosen, the Rubrik Plugin for Errbot will already be completed. There is no further configuration needed.**
+
+## Configuration with errbot cli
+
+Adding the Rubrik Plugin for Errbot configuration can be accomplished by passing the desired API_Token and Node_IP JSON values through the --storage-merge parameter.
+
+**Note: You cannot update the configuration of the Rubrik Plugin for Errbot while Errbot is running. It must be stopped first**
+
+The following command can be used to configure the Rubrik Plugin for Errbot through the errbot cli:
+
+`echo "{'configs': {'Rubrik': {'API_TOKEN': '<Rubrik API Token>', 'NODE_IP': '<NODE IP TO USE>'}}}" | <path_to_errbot>/bin/errbot -c <path_to_errbot_config.py> --storage-merge core`
+
+Once errbot is started again commands to the bot can be issued.
+
+## Configuration through Matterbost bot
 Errbots pluggable architecture allows the configuration of its' plugins to be performed within Errbot itself. For the sake of this guide, we will perform the configuration of the Rubrik Plugin for Errbot directly from within Mattermost through direct messages with our bot user. The following outlines how to configure the Rubrik Plugin for Errbot (within Mattermost):
 
 1. Log into Mattermost as a user with *System Admin* priveleges.
