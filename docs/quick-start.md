@@ -196,11 +196,120 @@ If following along with this guide, the command would look as follows:
 
 `source /usr/share/errbot-core/bin/activate && /usr/share/errbot-core/bin/errbot -c /usr/share/errbot-roxie/config.py`
 
+Passing the `-d` parameter to errbot will start the process in daemon (background) mode:
+
+`source /usr/share/errbot-core/bin/activate && /usr/share/errbot-core/bin/errbot -d -c /usr/share/errbot-roxie/config.py`
+
 #### Configuring Errbot and Roxie to start on system boot
+
+The following will walk through how to setup the Roxie to start upon boot using systemd.
+
+1. Create a startup script to start Errbot passing the Roxie configuration file. Save the file as `runroxie` within the `/usr/bin` directory on the local system.  The following shows an example of a `runroxie` file.
+
+    ```
+    source /usr/share/errbot/errbot-core/bin/activate && /usr/share/errbot/errbot-core/bin/errbot -d -c /usr/share/errbot/roxie/config.py &
+
+    while true; do
+        sleep 100
+    done
+    ```
+
+1. Create a systemd service file pointing to the `runroxie` script. Save the file as `roxie-errbot.service` within the `/lib/systemd/system/` directory on the local system. The following shows an example of a `roxie-errbot.service` file.
+
+    ```
+    [Unit]
+    Description=Rubrik Roxie Plugin for Errbot
+    After=mattermost.service
+
+    [Service]
+    Type=simple
+    ExecStart=/bin/bash /usr/bin/runroxie
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+
+1. Reload systemctl using the following command:
+
+    `systemctl daemon-reload`
+
+1. Start the Roxie service using the following command:
+
+    `systemctl start roxie-errbot`
+
+1. To have the service persist on a reboot, enable the service with the following command:
+
+    `systemctl enable roxie-errbot`
+
+The Rubrik Plugin for Errbot will now start upon a reboot of the machine. Before using the plug-in however, it must be configured.
 
 # Configuring the Rubrik Plugin for Errbot
 
-TODO
+Errbots pluggable architecture allows the configuration of its' plugins to be performed within Errbot itself. For the sake of this guide, we will perform the configuration of the Rubrik Plugin for Errbot directly from within Mattermost through direct messages with our bot user. The following outlines how to configure the Rubrik Plugin for Errbot (within Mattermost):
+
+1. Log into Mattermost as a user with *System Admin* priveleges.
+
+1. Find the bot user created to handle the communication with the Rubrik Plugin for Errbot. If following this guide, that would be *Roxie*
+
+1. Issue the following command to retrieve the current configuration of the Rubrik Plugin for Errbot. *Commands are simply entered in as a DM to the bot*
+
+`!plugin config Rubrik`
+
+1. As shown below there are two pieces of information we need to configure; `Node_IP` and `API_Token`
+
+    ![](img/default-config.png)
+
+    `Node_IP` - representing a node or cluster IP/DNS
+    `API_Token` - A generated API token within Rubrik with administrative priveleges
+
+1. To modify the configuration values, simply send the same command with the proper JSON values appended:
+
+    ![](img/set-configuration.png)
+
+The Rubrik Plugin for Errbot has now been configured. You may begin issuing commands to the bot.
+
+# Using the Rubrik Plugin for Errbot
+
+Like many other Errbot plugins, the Rubrik Plugin for Errbot will respond to commands that are prefixed with an exclamation mark (`!`). Some commands will require parameters, while others do not. The following will walk through four of the most popular commands within the Rubrik Plugin for Errbot:
+
+**Retrieving the Rubrik Cluster software version**
+
+To retrieve the software version of the currently connected Rubrik cluster, simply send the `!sofwareversion` command as a DM to your bot. As shown below, the bot will in turn issue the API calls to retrieve this information, parse it, and respond back to the DM:
+
+![](img/softwareversion.png)
+
+**Assigning an SLA Domain to a VMware VM**
+
+An SLA Domain may be assigned to a VMware VM by issuing the `!assignslavmware` command and providing values for the following 2 arguments:
+    * `--vm` - the virtual machine in which to assing the SLA Domain to.
+    * `--sla-domain` - the desired SLA Domain name to assign.
+
+For example, to assign a virtual machined named VM1 to an SLA Domain named Gold, the following command is issued:
+`!assignslavmware --vm VM1 --sla-domain Gold`
+
+The bot will in turn issue the commands to assign the SLA Domain to the virtual machine, and respond with a message outlining the result. Illustrated below are a few of the possible outcomes when assigning an SLA Domain:
+
+![](img/assignsla.png)
+
+**Performing an on-demand snapshot of a VMware VM**
+
+The Rubrik Plugin for Errbot may be used to trigger on-demand snapshots of VMware VMs by issuing the `!ondemandsnapshot` and providing the following arguments:
+    * `--vm` - the virtual machine in which to perform the backup on
+    * `--sla-domain`(Optional) - the SLA Domain of which to apply to the backup. If no value is passed, the VMs currently assigned SLA Domain will be used.
+
+For example, to take an on demand snapshot of a VM named VM1 with the Gold SLA Domain the following command is issued:
+`!ondemandsnapshot --vm VM1 --sla-domain Gold`
+To take an on demand snapshot of the same VM with the currently assigned SLA Domain the following commmand is issued:
+`!ondemandsnapshot --vm VM1`
+
+The bot iwill in turn issue the commands to the Rubrik cluster to take the on-demand snapshot and respond with a message outlining the result. Illustrated below are a few of the possible outcomes when taking on-demand snapshots
+
+PIC
+
+**Performing a Live Mount of a VMware VM**
+
+
+
 
 # Code Review
 

@@ -245,10 +245,65 @@ BOT_ADMINS = ('@admin', )" >> $errbotdir/roxie/config.py
 		cecho "=============================="
 		cecho "Congrats - we are done!" $cyan
 		echo ""
-		cecho "Start your bot with the below command, head into Mattemost and start chatting!" $cyan
+		cecho "Start your bot with the below command, head into Mattemost, configure authentication and start chatting!" $cyan
+		echo ""
+		cecho "======================================================================================"
+		echo ""
+		cecho "Start bot in foreground mode with following command..." $cyan
 		echo ""
 		echo "source $errbotdir/errbot-core/bin/activate && $errbotdir/errbot-core/bin/errbot -c $errbotdir/roxie/config.py"	
+		echo ""
+		cecho "Start bot in daemon mode with the following command..." $cyan
+		echo ""
+		echo "source $errbotdir/errbot-core/bin/activate && $errbotdir/errbot-core/bin/errbot -d -c $errbotdir/roxie/config.py"
+		echo ""
+		cecho "======================================================================================"
+		echo ""
+		read -r -p "Would you like to configure Roxie to run on startup? [Y/N] " response
+		if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+			echo ""
+			cecho "Good Choice!  I'll get working on that now!" $cyan
+			cecho " - Creating startup script for Roxie..." $yellow "no"
+			echo "source $errbotdir/errbot-core/bin/activate && $errbotdir/errbot-core/bin/errbot -d -c $errbotdir/roxie/config.py &
 
+
+while true; do
+        sleep 10
+done" >> /usr/bin/runroxie
+			cecho "Done!" $green
+			cecho " - Setting up systemd service..." $yellow "no"
+			echo "[Unit]
+Description=Rubrik Roxie Plugin for Errbot
+After=mattermost.service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /usr/bin/runroxie
+
+[Install]
+WantedBy=multi-user.target
+" >> /lib/systemd/system/roxie-errbot.service
+			cecho "Done!" $green
+			cecho " - Reloading systemd..." $yellow "no"
+			systemctl daemon-reload
+			cecho "Done!" $green
+			cecho " - Enabling Roxie to start on boot..." $yellow "no"
+			systemctl enable roxie-errbot.service
+			cecho "Done!" $green
+			cecho " - Starting Roxie service..." $yellow "no"
+			systemctl start roxie-errbot.service
+			cecho "Done!" $green
+		else
+			echo ""
+			cecho "Well, whatever, start and stop it yourself the above commands then!" $cyan
+		fi
+		echo ""
+		echo ""
+		cecho "Once Errbot is started you can configure the Rubrik Roxie Plugin by heading into Mattermost and DM'ing $botusername with the following text..." $cyan
+		cecho "!plugin config Rubrik" $yellow
+		echo ""
+		
+		cecho "That's a wrap!!! I'll let Roxie take it from here!" $cyan
 	else
 		cecho "I get it, something just doesn't feel right" $red
 		cecho "Let's just kill the script and maybe we can try again in a bit..." $red
