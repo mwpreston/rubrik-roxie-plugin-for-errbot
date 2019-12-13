@@ -96,10 +96,16 @@ then
 	echo ""
 	read -r -p "Where would you like to store this? [/usr/share/errbot] " errbotdir
 	errbotdir=${errbotdir:-/usr/share/errbot}
+	read -r -p "Where would you like to store the errbot and roxie configuration file [/etc/errbot] " errbotconfig
+	errbotconfig=${errbotconfig:-/etc/errbot}
+	read -r -p "Where would you like to store the errbot and roxie log files [/var/log/errbot] " errbotlogs
+	errbotlogs=${errbotlogs:-/var/log/errbot}
 	echo ""
-	
+	cecho "Almost there - Let's talk about the Rubrik Cluster now..." $cyan
+	read -r -p "What is the IP or DNS name of the Rubrik node or cluster you wish to connect to? " rubriknode
+	read -r -p "I also need a generated API token with administrative priveleges? " rubrikapi
+	echo ""	
 	cecho "Now we will need some information around your Mattermost installation" 
-	echo ""
 	read -r -p "What is the IP or DNS of your Mattermost server? [localhost] " mattermostserver
 	read -r -p "What team would you like to install the bot into? " mattermostteam
 	read -r -p "Do you run Mattermost under http or https? [http] " mattermostscheme
@@ -144,15 +150,21 @@ then
 	cecho "Alright - I think we got it!  Here's the rundown of what will happen"
 	echo ""
 	cecho "We will create the following directories on this system..."
-	cecho " - $errbotdir/errbot-core - to host your Errbot core files and run a virtualenv" $yellow
+	cecho " - $errbotdir - to host your Errbot core files and run a virtualenv" $yellow
 	cecho " - $errbotdir/mattermost - to host the Mattermost backend for Errbot" $yellow
 	cecho " - $errbotdir/roxie - To host the Rubrik Plugin for Errbot and the main configuration file" $yellow
+	cecho " - $errbotconfig - To host the Roxie and Errbot configuration files" $yellow
+	cecho " - $errbotlogs - To host the Errbot and Roxie log files" $yellow
 	echo ""
 	cecho "We will use the following Mattermost settings to build the bot configuration file..."
 	cecho " - Server: $mattermostserver" $yellow
 	cecho " - Scheme: $mattermostscheme" $yellow
 	cecho " - Port: $mattermostport" $yellow
 	cecho " - Team: $mattermostteam" $yellow
+	echo ""
+	cecho "We will use the following information to connect to Rubrik"
+	cecho " - Node IP: $rubriknode" $yellow
+	cecho " - API Token: $rubrikapi" $yellow
 	echo ""
 	cecho "$botmessage"
         cecho " - Username: $botusername" $yellow
@@ -167,63 +179,72 @@ then
 		cecho "Excellent! Sit back, chill, grab a bevvy - we will keep you posted"
 		echo ""
 		cecho "Begining Installation...." $cyan
-		cecho " - Creating Directory for Errbot Core files in $errbotdir/errbot-core..." $yellow "no"
-		mkdir -p $errbotdir/errbot-core
+		cecho " - Creating Directory for Errbot Core files in $errbotdir..." $yellow "no"
+		mkdir -p $errbotdir
 		cecho "Done" $green
 		cecho " - Creating Directory for Rubrik Roxie plugin in $errbotdir/roxie..." $yellow "no"
                 mkdir -p $errbotdir/roxie
                 cecho "Done" $green
-		cecho " - Creating Directory for Mattermost Errbot backend in $errbotdir/errbot-mattermost" $yellow "no"
-                mkdir -p $errbotdir/errbot-mattermost
+		cecho " - Creating Directory for Mattermost Errbot backend in $errbotdir/mattermost" $yellow "no"
+                mkdir -p $errbotdir/mattermost
                 cecho "Done" $green
-		cecho " - Creating virtualenv in $errbotdir/errbot-core..." $yellow "no"
-		virtualenv --python `which python3` $errbotdir/errbot-core > /dev/null
+                cecho " - Creating Directory for errbot and roxie configuration files in $errbotconfig" $yellow "no"
+                mkdir -p $errbotconfig
+                cecho "Done" $green
+                cecho " - Creating Directory for errbot and roxie log files in $errbotlogs" $yellow "no"
+                mkdir -p $errbotlogs
+                cecho "Done" $green
+		cecho " - Creating virtualenv in $errbotdir..." $yellow "no"
+		virtualenv --python `which python3` $errbotdir > /dev/null
 		cecho "Done" $green
 		cecho " - Installing Errbot into virtualenv..." $yellow "no"
-		$errbotdir/errbot-core/bin/pip install errbot > /dev/null
+		$errbotdir/bin/pip install errbot > /dev/null
 		cecho "Done" $green
 		cecho " - Installing the Rubrik SDK for Python into virtualenv..." $yellow "no"
-		$errbotdir/errbot-core/bin/pip install rubrik_cdm > /dev/null
+		$errbotdir/bin/pip install rubrik_cdm > /dev/null
 		cecho "Done" $green		
                 cecho " - Installing the mattermostdriver into virtualenv..." $yellow "no"
-                $errbotdir/errbot-core/bin/pip install mattermostdriver > /dev/null
+                $errbotdir/bin/pip install mattermostdriver > /dev/null
                 cecho "Done" $green
-		cecho " - Adding $errbotdir/errbot-mattermost to virtualenv PYTHONPATH environment variable..." $yellow "no"
-		echo "export PYTHONPATH=$errbotdir/errbot-mattermost:\$PYTHONPATH" >> $errbotdir/errbot-core/bin/activate
+		cecho " - Adding $errbotdir/mattermost to virtualenv PYTHONPATH environment variable..." $yellow "no"
+		echo "export PYTHONPATH=$errbotdir/mattermost:\$PYTHONPATH" >> $errbotdir/bin/activate
 		cecho "Done" $green
-		cecho " - Activating the virtualenv..." $yellow "no"
-		source $errbotdir/errbot-core/bin/activate > /dev/null
-		cecho "Done" $green
-		cecho " - Creating Errbot instance in $errbotdir/roxie" $yellow "no"
-		cd $errbotdir/roxie
-		errbot --init > /dev/null
-		deactivate
-		cecho "Done" $green
+		#cecho " - Activating the virtualenv..." $yellow "no"
+		#source $errbotdir/errbot-core/bin/activate > /dev/null
+		#cecho "Done" $green
+		#cecho " - Creating Errbot instance in $errbotdir/roxie" $yellow "no"
+		#cd $errbotdir/roxie
+		#errbot --init > /dev/null
+		#deactivate
+		#cecho "Done" $green
 		cecho " - Cloning the Roxie Errbot plugin from GitHub...." $yellow "no"
 		git clone -q https://github.com/mwpreston/rubrik-roxie-plugin-for-errbot.git /tmp/rubrik-roxie-errbot > /dev/null
 		cecho "Done" $green
 		cecho " - Copying Roxie plugin files to $errbotdir/roxie/plugins..." $yellow "no"
+		mkdir $errbotdir/roxie/plugins
+		mkdir $errbotdir/roxie/data
 		cp -r /tmp/rubrik-roxie-errbot/rubrik $errbotdir/roxie/plugins/
+		rm -fr /tmp/rubrik-roxie-errbot
 		cecho "Done" $green
-		cecho " - Cloning Mattermost Backend for Errbot into $errbotdir/errbot-mattermost" $yellow "no"
-		git clone -q https://github.com/Vaelor/errbot-mattermost-backend.git $errbotdir/errbot-mattermost > /dev/null
+		cecho " - Cloning Mattermost Backend for Errbot into $errbotdir/mattermost" $yellow "no"
+		git clone -q https://github.com/Vaelor/errbot-mattermost-backend.git $errbotdir/mattermost > /dev/null
 		cecho "Done" $green
 		cecho " - Creating $botusername user in Mattermost.  This will be our bot!!!..." $yellow "no"
 		cd /opt/mattermost/bin
-		./mattermost user create --email $botemail --username $botusername --password $botpassword --system_admin
+		./mattermost user create --email $botemail --username $botusername --password $botpassword --system_admin > /dev/null 2>&1
 		cecho "Done" $green
-		cecho " - Backing up default configuration file in $errbotdir/roxie/..." $yellow "no"
-		mv $errbotdir/roxie/config.py $errbotdir/roxie/config.py.bak
-		cecho "Done" $green
-		cecho " - Creating new configuration file in $errbotdir/roxie/..." $yellow "no"
+		#cecho " - Backing up default configuration file in $errbotdir/roxie/..." $yellow "no"
+		#mv $errbotdir/roxie/config.py $errbotdir/roxie/config.py.bak
+		#cecho "Done" $green
+		cecho " - Creating new configuration file  $errbotconfig/config.py..." $yellow "no"
 		echo "import logging
 		
 BACKEND = 'Mattermost'
-BOT_EXTRA_BACKEND_DIR = '$errbotdir/errbot-mattermost' # This points where we cloned the Mattermost Backend
+BOT_EXTRA_BACKEND_DIR = '$errbotdir/mattermost' # This points where we cloned the Mattermost Backend
 BOT_DATA_DIR = '$errbotdir/roxie/data' # This points to where we first initialized our Errbot instance
 BOT_EXTRA_PLUGIN_DIR = '$errbotdir/roxie/plugins/' # This points to where we first initialized our Errbot instance
 BOT_LOG_LEVEL = logging.DEBUG
-BOT_LOG_FILE = '$errbotdir/roxie/errbot.log'
+BOT_LOG_FILE = '$errbotlogs/errbot.log'
 
 BOT_IDENTITY = {
         # Required
@@ -238,8 +259,13 @@ BOT_IDENTITY = {
         'port': $mattermostport # Default = 8065
 }
 
-BOT_ADMINS = ('@admin', )" >> $errbotdir/roxie/config.py
+BOT_ADMINS = ('@admin', )" >> $errbotconfig/config.py
 		cecho "Done" $green
+		echo ""
+		cecho " - Configuring Rubrik Plugin for Errbot..." $yellow "no"
+		echo "{'configs': {'Rubrik': {'API_TOKEN': '$rubrikapi', 'NODE_IP': '$rubriknode'}}}" | $errbotdir/bin/errbot -c $errbotconfig/config.py --storage-merge core
+		cecho "Done!" $green
+		echo ""
 		echo ""
 	        cecho "Installation Complete!!!"
 		cecho "=============================="
@@ -251,11 +277,11 @@ BOT_ADMINS = ('@admin', )" >> $errbotdir/roxie/config.py
 		echo ""
 		cecho "Start bot in foreground mode with following command..." $cyan
 		echo ""
-		echo "source $errbotdir/errbot-core/bin/activate && $errbotdir/errbot-core/bin/errbot -c $errbotdir/roxie/config.py"	
+		echo "source $errbotdir/bin/activate && $errbotdir/bin/errbot -c $errbotconfig/config.py"	
 		echo ""
 		cecho "Start bot in daemon mode with the following command..." $cyan
 		echo ""
-		echo "source $errbotdir/errbot-core/bin/activate && $errbotdir/errbot-core/bin/errbot -d -c $errbotdir/roxie/config.py"
+		echo "source $errbotdir/bin/activate && $errbotdir/bin/errbot -d -c $errbotconfig/config.py"
 		echo ""
 		cecho "======================================================================================"
 		echo ""
@@ -264,7 +290,7 @@ BOT_ADMINS = ('@admin', )" >> $errbotdir/roxie/config.py
 			echo ""
 			cecho "Good Choice!  I'll get working on that now!" $cyan
 			cecho " - Creating startup script for Roxie..." $yellow "no"
-			echo "source $errbotdir/errbot-core/bin/activate && $errbotdir/errbot-core/bin/errbot -d -c $errbotdir/roxie/config.py &
+			echo "source $errbotdir/bin/activate && $errbotdir/bin/errbot -d -c $errbotconfig/config.py &
 
 
 while true; do
