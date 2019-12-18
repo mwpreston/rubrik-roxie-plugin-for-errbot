@@ -36,13 +36,15 @@ Installation can be performed in two different manners; Automated or Manual, out
 
 ## Automated Installation
 
-For convenience we have developed a script which will automate all of the actions performed in the Manual Installation section. **Note** The automated installation only works when you wish to install all components on the same server which runs Mattermost.
+For convenience we have developed a script which will automate all of the actions performed in the Manual Installation section. 
+
+**Note: The automated installation only works when you wish to install all components on the same server which runs Mattermost.**
 
 To run an automated installation use the following steps:
 
 1. Download the automated script [here](/install/install.sh)
 1. Execute the script by running `./install.sh`
-1. The script will prompt for various bits of information including installation directories, Mattermost configuration, and Bot configuration. Be sure to input everything correctly when prompted.
+1. The script will prompt for various bits of information including installation directories, Mattermost configuration, Rubrik configuration, and Bot configuration. Be sure to input everything correctly when prompted.
 1. Upon completion, Errbot, Mattermost Backend for Errbot, MattermostDriver, and the Rubrik Plugin for Errbot will be installed.
 1. A basic configuration based on inputs provided will be automatically applied during the script execution. If changes are required, more details around this can be found in the [`Configuring the Rubrik Plugin for Errbot`](#Configuring-the-Rubrik-Plugin-for-Errbot) section.
 
@@ -322,7 +324,7 @@ For example, to take an on demand snapshot of a VM named VM1 with the Gold SLA D
 To take an on demand snapshot of the same VM with the currently assigned SLA Domain the following commmand is issued:
 `!ondemandsnapshot --vm VM1`
 
-The bot iwill in turn issue the commands to the Rubrik cluster to take the on-demand snapshot and respond with a message outlining the result. Illustrated below are a few of the possible outcomes when taking on-demand snapshots
+The bot will in turn issue the commands to the Rubrik cluster to take the on-demand snapshot and respond with a message outlining the result. Illustrated below are a few of the possible outcomes when taking on-demand snapshots
 
 PIC
 
@@ -347,16 +349,67 @@ PIC
 
 # Contributing
 
-We welcome any and all types of contributions to the Rubrik Plugin for Errbot, whether they be documentation updates or new functions.
+We welcome any and all types of contributions to the Rubrik Plugin for Errbot, whether they be documentation updates or the creation of new functions and commands.
 
 ## Creating new commands
 
-Creating new commands within the Rubrik Plugin for Errbot is as simple as creating a function within the `rubrik.py` file. The following will walk through a basic overview of how to create a new function. For more information and details, please see the [Errbot Devleopers Guide]()
+Creating new commands within the Rubrik Plugin for Errbot is as simple as creating a function within the `rubrik.py` file. The following will walk through a basic overview of how to create a new function. For more information and details, please see the [Errbot Devleopers Guide](https://errbot.readthedocs.io/en/latest/user_guide/plugin_development/).
 
+All new commands and functions should be placed in the `rubrik.py` file within the plugins/rubrik directory. Depending on whether the command will need to support arguments or not, it will follow one of the following formats:
 
+**Commands without arguments**
 
+```
+@botcmd
+def commandname(self, msg, args):
+    # Function Code
+```
 
-TODO
+**Commands supporting arguments**
+
+```
+@arg_botcmd('--arg1', dest='arg1',type=str)
+@arg_botcmd('--arg2', dest='arg2',type=str)
+def commandname(self, msg, arg1, arg2):
+    # Function Code
+```
+
+The following will walk through the command code which performs a VMware VM Live Mount, a function which already exists within the Rubrik Plugin for Errbot.
+
+```
+    # Function to Live Mount a VMware VM
+    @arg_botcmd('--vm',dest='vm',type=str)
+    @arg_botcmd('--date',dest='date',type=str,default='latest')
+    @arg_botcmd('--time',dest='time',type=str,default='latest')
+    @arg_botcmd('--host',dest='host',type=str,default='current')
+    @arg_botcmd('--remove-network-devices',dest='removenetworkdevices',type=bool,default=False)
+    @arg_botcmd('--power-on',dest='poweron',type=bool,default=True)
+    def livemountvmwarevm(self,msg,vm,date,time,host,removenetworkdevices,poweron):
+        yield ':thumbsup: 10-4 good buddy! I''ll proceed to live mount `'+vm+'` I''ll let you know when I''m done :point_down:'
+        try:
+            rubrik = rubrik_cdm.Connect(node_ip=self.config['NODE_IP'],api_token=self.config['API_TOKEN'])
+            live_mount = rubrik.vsphere_live_mount(vm_name=vm,date=date,time=time,host=host,remove_network_devices=removenetworkdevices,power_on=poweron)
+
+            yield ':hammer: Request for live mount of `'+vm+'` has been submitted! You can monitor the progress with the following API URI `'+live_mount['links'][0]['href']+'` That said, I''ll totally let you know when its done'
+            progress = rubrik.job_status(url=live_mount['links'][0]['href'],wait_for_completion=True)
+            yield ':fire: Looks like the live mount for `'+vm+'` has completed with a status of '+progress['status']
+
+        except Exception as e:
+            yield ':eyes: '+str(e)+' :eyes:'
+```
+**Line 1-6** - These lines simply define a number of required and optional parameters which are needed in order to perform our live mount.
+**Lines 7** - This is our function definition. Note that the Errbot command will use the function name as its' text. In this case, we can launch our function by sending a !livemountvmwarevm command within Errbot.
+**Line 8** - `yield` is a special Errbot definition which will return text back to the user without exiting the function. In this example, we inform the user that we have recieved their arguments and will begin the command to perform the live mount.
+**Line 10** - Using the information stored within the plugins storage, we connect to our Rubrik instance and store the connection within the `rubrik` variable.
+**Line 11** - Using a function defined with the Python SDK for Rubrik we perform the actual live mount of the desired VM.
+**Line 12** - A `yield` message is sent back to the user informing the status of the Live Mount.
+**Line 13** - Another function within the Python SDK for Rubrik is called to determine the progress of the task, and wait for completion
+**Line 14** - We inform the user of the task status
+**Line ??** - If any exceptions are raised, we inform the user of the exception message.
+
+## Contribuing new commands to the Rubrik Plugin for Errbot
+
+The Rubrik Plugin for Errbot follows the Git Flow process for ???.
 
 # Further Reading
 
@@ -365,4 +418,6 @@ TODO
 * Errbot Documentation
 * Mattermost Documentation
 * Rubrik API Documentation
+* Rubrik SDK for Python Documentation
+* Errbot Plugin Development Guide
 
