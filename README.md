@@ -1,6 +1,6 @@
-# Roxie Plugin for Errbot
+# Rubrik Plugin for Errbot
 
-Errbot is a python based chatbot that connects to your favorite chat service and brings your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant into the fold. Utilizing the Roxie Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collobaration platforms, granting end-users to chat or query the plugin in order to perform functions through simple conversation such as:
+Errbot is a python based chatbot that connects to your favorite chat service and brings your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant into the fold. Utilizing the Rubrik Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collobaration platforms, granting end-users to chat or query the plugin in order to perform functions through simple conversation such as:
 
 - Assigning an SLA Domain to a Rubrik object
 - Taking an on-demand snapshot of a Virtual Machine
@@ -22,7 +22,7 @@ There are a few services you'll need in order to get this project off the ground
 * [Errbot](https://errbot.readthedocs.io/en/latest/) - without an actual Errbot installation we can't do much with a plugin
 * Rubrik CDM 4.0 or later - the platform that protects provisioned workloads
 
-Depending on the chat/colloboration platform you intend to use additional plugins or connectors may be required. For example, using the Roxie Plugin for Errbot with Mattermost additionaly requires:
+Depending on the chat/colloboration platform you intend to use additional plugins or connectors may be required. For example, using the Rubrik Plugin for Errbot with Mattermost additionaly requires:
 
 * [Mattermost](https://mattermost.com/) - High Trust Messaging for the Enterprise
 * [Errbot Backend for Mattermost](https://github.com/Vaelor/errbot-mattermost-backend) - Connects Mattermost to Errbot
