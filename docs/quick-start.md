@@ -326,11 +326,11 @@ To take an on demand snapshot of the same VM with the currently assigned SLA Dom
 
 The bot will in turn issue the commands to the Rubrik cluster to take the on-demand snapshot and respond with a message outlining the result. Illustrated below are a few of the possible outcomes when taking on-demand snapshots
 
-PIC
+![](img/ondemandsnapshot.png)
 
 **Performing a Live Mount of a VMware VM**
 
-The Rubrik Plugin for Errbot may be used to create Live Mounts of VMware VM backups by issuing the `!livemountvmware` command and providing the following arguments:
+The Rubrik Plugin for Errbot may be used to create Live Mounts of VMware VM backups by issuing the `!livemountvmwarevm` command and providing the following arguments:
     * `--vm` - (String, Required) The Virtual Machine you wish to Live Mount
     * `--date` - (String, Optional) The date of the restore point you wish to Live Mount. By default the latest date will be utilized
     * `--time` - (String, Optional) The time of the restore point on the specified date you wish to Live Mount. By default the latest time will be utilized.
@@ -339,13 +339,13 @@ The Rubrik Plugin for Errbot may be used to create Live Mounts of VMware VM back
     * `--power-on` - (Boolean, Optional) - Whether you wish to power on the Live Mounted VM. By default, this is set to True.
 
 For example, to Live Mount a VM named VM1 using all of the default parameter values the following command is issued:
-`!livemountvmware --vm VM1`
+`!livemountvmwarevm --vm VM1`
 To live mount the same VM, this time removing the networking devices and running on a host named ESX02, the following command is issued:
-`!livemountvmware --vm VM1 --host ESX02 --remove-network-devices True`
+`!livemountvmwarevm --vm VM1 --host ESX02 --remove-network-devices True`
 
 The bot will in turn issue the commands to the Rubrik Cluster in order to perform the live mount and respond with a message outlining the result. Illustrated below are a few o the possible outcomes when live mounting VMware VMs with the Rubrik Plugin for Errbot
 
-PIC
+![](img/livemount.png)
 
 # Contributing
 
