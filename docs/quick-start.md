@@ -385,24 +385,24 @@ def commandname(self, msg, arg1, arg2):
 The following will walk through the command code which performs a VMware VM Live Mount, a function which already exists within the Rubrik Plugin for Errbot.
 
 ```
-    @arg_botcmd('--vm',dest='vm',type=str)
-    @arg_botcmd('--date',dest='date',type=str,default='latest')
-    @arg_botcmd('--time',dest='time',type=str,default='latest')
-    @arg_botcmd('--host',dest='host',type=str,default='current')
-    @arg_botcmd('--remove-network-devices',dest='removenetworkdevices',type=bool,default=False)
-    @arg_botcmd('--power-on',dest='poweron',type=bool,default=True)
-    def livemountvmwarevm(self,msg,vm,date,time,host,removenetworkdevices,poweron):
-        yield ':thumbsup: 10-4 good buddy! I''ll proceed to live mount `'+vm+'` I''ll let you know when I''m done :point_down:'
-        try:
-            rubrik = rubrik_cdm.Connect(node_ip=self.config['NODE_IP'],api_token=self.config['API_TOKEN'])
-            live_mount = rubrik.vsphere_live_mount(vm_name=vm,date=date,time=time,host=host,remove_network_devices=removenetworkdevices,power_on=poweron)
+@arg_botcmd('--vm',dest='vm',type=str)
+@arg_botcmd('--date',dest='date',type=str,default='latest')
+@arg_botcmd('--time',dest='time',type=str,default='latest')
+@arg_botcmd('--host',dest='host',type=str,default='current')
+@arg_botcmd('--remove-network-devices',dest='removenetworkdevices',type=bool,default=False)
+@arg_botcmd('--power-on',dest='poweron',type=bool,default=True)
+def livemountvmwarevm(self,msg,vm,date,time,host,removenetworkdevices,poweron):
+    yield ':thumbsup: 10-4 good buddy! I''ll proceed to live mount `'+vm+'` I''ll let you know when I''m done :point_down:'
+    try:
+        rubrik = rubrik_cdm.Connect(node_ip=self.config['NODE_IP'],api_token=self.config['API_TOKEN'])
+        live_mount = rubrik.vsphere_live_mount(vm_name=vm,date=date,time=time,host=host,remove_network_devices=removenetworkdevices,power_on=poweron)
 
-            yield ':hammer: Request for live mount of `'+vm+'` has been submitted! You can monitor the progress with the following API URI `'+live_mount['links'][0]['href']+'` That said, I''ll totally let you know when its done'
-            progress = rubrik.job_status(url=live_mount['links'][0]['href'],wait_for_completion=True)
-            yield ':fire: Looks like the live mount for `'+vm+'` has completed with a status of '+progress['status']
+        yield ':hammer: Request for live mount of `'+vm+'` has been submitted! You can monitor the progress with the following API URI `'+live_mount['links'][0]['href']+'` That said, I''ll totally let you know when its done'
+        progress = rubrik.job_status(url=live_mount['links'][0]['href'],wait_for_completion=True)
+        yield ':fire: Looks like the live mount for `'+vm+'` has completed with a status of '+progress['status']
 
-        except Exception as e:
-            yield ':eyes: '+str(e)+' :eyes:'
+    except Exception as e:
+        yield ':eyes: '+str(e)+' :eyes:'
 ```
 * **Lines 1-6** - These lines simply define a number of required and optional parameters which are needed in order to perform our live mount.
 * **Line 7** - This is our function definition. Note that the Errbot command will use the function name as its' text. In this case, we can launch our function by sending a !livemountvmwarevm command within Errbot.
