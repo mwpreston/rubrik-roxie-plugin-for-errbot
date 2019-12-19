@@ -1,6 +1,6 @@
-# Introduction to the Rubrik Roxie Plugin for Errbot
+# Introduction to the Rubrik Plugin for Errbot
 
-Errbot is a python based chatbot that connects to your favorite chat service and brings your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant into the fold. Utilizing the Roxie Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collobaration platforms, granting end-users to chat or query the plugin in order to perform functions through simple conversation such as:
+Errbot is a python based chatbot that connects to your favorite chat service and brings your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant into the fold. Utilizing the Rubrik Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collobaration platforms, granting end-users to chat or query the plugin in order to perform functions through simple conversation such as:
 
 - Assigning an SLA Domain to a Rubrik object
 - Taking an on-demand snapshot of a Virtual Machine
@@ -14,7 +14,7 @@ The Rubrik Plugin for Errbot will interpret the natural conversation and peform 
 
 The code assumes that you have already deployed at least one Rubrik cluster into your environment and have completed the initial configuration process to form a cluster. This code also assumes that Mattermost, the chat service Errbot will connect to, has been downloaded and configured properly.
 
-The following software packages are prerequisites in order to support the Roxie Plugin for Errbot and Mattermost.
+The following software packages are prerequisites in order to support the Rubrik Plugin for Errbot and Mattermost.
 
 1. [Python3](https://www.python.org/download/releases/3.0/)
 1. [virtualenv](https://virtualenv.pypa.io/en/latest/)
@@ -30,7 +30,7 @@ After completing this guide the following applications and packages will be inst
 1. Errbot
 1. mattermostdriver
 1. Mattermost Backend for Errbot
-1. Rubrik Python SDK
+1. Rubrik SDK for Python
 1. Rubrik Plugin for Errbot
 
 Installation can be performed in two different manners; Automated or Manual, outlined below.
@@ -65,7 +65,7 @@ The first step to creating our Roxie bot involves getting Errbot installed, conf
 
     `/usr/share/errbot/bin/pip install errbot`
 
-1. Install the Rubrik Python SDK
+1. Install the Rubrik SDK for Python
 
     `/usr/share/errbot/bin/pip install rubrik_cdm`
 
@@ -83,7 +83,7 @@ The first step to creating our Roxie bot involves getting Errbot installed, conf
 
 ### Installing the Rubrik Plugin for Errbot 
 
-1. Download the Rubrik Roxie Plugin for Errbot
+1. Download the Rubrik Plugin for Errbot
 
     `git clone https://github.com/mwpreston/rubrik-roxie-plugin-for-errbot.git /tmp/rubrik-roxie`
 
@@ -221,7 +221,7 @@ The following will walk through how to setup the Roxie to start upon boot using 
 
     ```
     [Unit]
-    Description=Rubrik Roxie Plugin for Errbot
+    Description=Rubrik Plugin for Errbot
     After=mattermost.service
 
     [Service]
@@ -411,21 +411,28 @@ The following will walk through the command code which performs a VMware VM Live
 * **Line 10** - Using the information stored within the plugins storage, we connect to our Rubrik instance and store the connection within the `rubrik` variable.
 * **Line 11** - Using a function defined with the Python SDK for Rubrik we perform the actual live mount of the desired VM.
 * **Line 12** - A `yield` message is sent back to the user informing the status of the Live Mount.
-* **Line 13** - Another function within the Python SDK for Rubrik is called to determine the progress of the task, and wait for completion
+* **Line 13** - Another function within the Rubrik SDK for Python is called to determine the progress of the task, and wait for completion
 * **Line 14** - We inform the user of the task status
 * **Line 16** - If any exceptions are raised, we inform the user of the exception message.
 
 ## Contribuing new commands to the Rubrik Plugin for Errbot
 
-The Rubrik Plugin for Errbot follows the Git Flow process for ???.
+Contributions via GitHub pull requests are gladly accepted from their original author. Along with any pull requests, please state that the contribution is your original work and that you license the work to the project under the project's open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under hte project's open source license and warrant that you have the legal authority to do so.
+
+### Pull requests - Workflow
+
+If you have code or documentation changes you would like to submit as a pull request please,
+
+* Fork the master repository
+* Make changes either directly in the forked branch or create a new branch for hte changes you would like to submit for review
+* Create a Pull Request (PR) and fill out hte template, then submit the Pull Requests for review
+
+From this point onwards, your changes will be validated and in the pull request additional code might be pushed or code changes can be suggested. Make sure that you monitor your notifications.
 
 # Further Reading
 
-TODO
-
-* Errbot Documentation
-* Mattermost Documentation
-* Rubrik API Documentation
-* Rubrik SDK for Python Documentation
-* Errbot Plugin Development Guide
-
+* [Errbot Documentation](http://errbot.io/en/latest/)
+* [Errbot Plugin Development Guide](http://errbot.io/en/latest/user_guide/plugin_development/)
+* [Mattermost Documentation](https://docs.mattermost.com/)
+* [Rubrik API Documentation](https://github.com/rubrikinc/api-documentation)
+* [Rubrik SDK for Python Documentation](https://github.com/rubrikinc/rubrik-sdk-for-python)
