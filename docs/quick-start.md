@@ -385,7 +385,6 @@ def commandname(self, msg, arg1, arg2):
 The following will walk through the command code which performs a VMware VM Live Mount, a function which already exists within the Rubrik Plugin for Errbot.
 
 ```
-    # Function to Live Mount a VMware VM
     @arg_botcmd('--vm',dest='vm',type=str)
     @arg_botcmd('--date',dest='date',type=str,default='latest')
     @arg_botcmd('--time',dest='time',type=str,default='latest')
@@ -405,8 +404,8 @@ The following will walk through the command code which performs a VMware VM Live
         except Exception as e:
             yield ':eyes: '+str(e)+' :eyes:'
 ```
-* **Line 1-6** - These lines simply define a number of required and optional parameters which are needed in order to perform our live mount.
-* **Lines 7** - This is our function definition. Note that the Errbot command will use the function name as its' text. In this case, we can launch our function by sending a !livemountvmwarevm command within Errbot.
+* **Lines 1-6** - These lines simply define a number of required and optional parameters which are needed in order to perform our live mount.
+* **Line 7** - This is our function definition. Note that the Errbot command will use the function name as its' text. In this case, we can launch our function by sending a !livemountvmwarevm command within Errbot.
 * **Line 8** - `yield` is a special Errbot definition which will return text back to the user without exiting the function. In this example, we inform the user that we have recieved their arguments and will begin the command to perform the live mount.
 * **Line 10** - Using the information stored within the plugins storage, we connect to our Rubrik instance and store the connection within the `rubrik` variable.
 * **Line 11** - Using a function defined with the Python SDK for Rubrik we perform the actual live mount of the desired VM.
