@@ -397,15 +397,15 @@ The following will walk through the command code which performs a VMware VM Live
         except Exception as e:
             yield ':eyes: '+str(e)+' :eyes:'
 ```
-**Line 1-6** - These lines simply define a number of required and optional parameters which are needed in order to perform our live mount.
-**Lines 7** - This is our function definition. Note that the Errbot command will use the function name as its' text. In this case, we can launch our function by sending a !livemountvmwarevm command within Errbot.
-**Line 8** - `yield` is a special Errbot definition which will return text back to the user without exiting the function. In this example, we inform the user that we have recieved their arguments and will begin the command to perform the live mount.
-**Line 10** - Using the information stored within the plugins storage, we connect to our Rubrik instance and store the connection within the `rubrik` variable.
-**Line 11** - Using a function defined with the Python SDK for Rubrik we perform the actual live mount of the desired VM.
-**Line 12** - A `yield` message is sent back to the user informing the status of the Live Mount.
-**Line 13** - Another function within the Python SDK for Rubrik is called to determine the progress of the task, and wait for completion
-**Line 14** - We inform the user of the task status
-**Line ??** - If any exceptions are raised, we inform the user of the exception message.
+* **Line 1-6** - These lines simply define a number of required and optional parameters which are needed in order to perform our live mount.
+* **Lines 7** - This is our function definition. Note that the Errbot command will use the function name as its' text. In this case, we can launch our function by sending a !livemountvmwarevm command within Errbot.
+* **Line 8** - `yield` is a special Errbot definition which will return text back to the user without exiting the function. In this example, we inform the user that we have recieved their arguments and will begin the command to perform the live mount.
+* **Line 10** - Using the information stored within the plugins storage, we connect to our Rubrik instance and store the connection within the `rubrik` variable.
+* **Line 11** - Using a function defined with the Python SDK for Rubrik we perform the actual live mount of the desired VM.
+* **Line 12** - A `yield` message is sent back to the user informing the status of the Live Mount.
+* **Line 13** - Another function within the Python SDK for Rubrik is called to determine the progress of the task, and wait for completion
+* **Line 14** - We inform the user of the task status
+* **Line 16** - If any exceptions are raised, we inform the user of the exception message.
 
 ## Contribuing new commands to the Rubrik Plugin for Errbot
 
