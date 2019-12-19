@@ -1,7 +1,7 @@
 # Rubrik Plugin for Errbot with Mattermost Quickstart Guide
 
-* [`Introduction to the Rubrik Plugin for Errbot`](#Introduction-to-the-Rubrik-Plugin-for-Errbot)
-* ['Prerequisites](#Prerequisites)
+* [Introduction to the Rubrik Plugin for Errbot](#Introduction-to-the-Rubrik-Plugin-for-Errbot)
+* [Prerequisites](#Prerequisites)
 * [Installation](#Installation)
     * [Automated](#Automated-Installation)
     * [Manual](#Manual-Installation)
