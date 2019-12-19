@@ -303,8 +303,8 @@ To retrieve the software version of the currently connected Rubrik cluster, simp
 **Assigning an SLA Domain to a VMware VM**
 
 An SLA Domain may be assigned to a VMware VM by issuing the `!assignslavmware` command and providing values for the following 2 arguments:
-    * `--vm` - (String, Required) The virtual machine in which to assing the SLA Domain to.
-    * `--sla-domain` - (String, Required) The desired SLA Domain name to assign.
+* `--vm` - (String, Required) The virtual machine in which to assing the SLA Domain to.
+* `--sla-domain` - (String, Required) The desired SLA Domain name to assign.
 
 For example, to assign a virtual machined named VM1 to an SLA Domain named Gold, the following command is issued:
 `!assignslavmware --vm VM1 --sla-domain Gold`
@@ -316,8 +316,8 @@ The bot will in turn issue the commands to assign the SLA Domain to the virtual 
 **Performing an on-demand snapshot of a VMware VM**
 
 The Rubrik Plugin for Errbot may be used to trigger on-demand snapshots of VMware VMs by issuing the `!ondemandsnapshot` and providing the following arguments:
-    * `--vm` - (String, Required) the virtual machine in which to perform the backup on
-    * `--sla-domain` - (String, Optional) the SLA Domain of which to apply to the backup. If no value is passed, the VMs currently assigned SLA Domain will be used.
+* `--vm` - (String, Required) the virtual machine in which to perform the backup on
+* `--sla-domain` - (String, Optional) the SLA Domain of which to apply to the backup. If no value is passed, the VMs currently assigned SLA Domain will be used.
 
 For example, to take an on demand snapshot of a VM named VM1 with the Gold SLA Domain the following command is issued:
 `!ondemandsnapshot --vm VM1 --sla-domain Gold`
@@ -331,12 +331,12 @@ The bot will in turn issue the commands to the Rubrik cluster to take the on-dem
 **Performing a Live Mount of a VMware VM**
 
 The Rubrik Plugin for Errbot may be used to create Live Mounts of VMware VM backups by issuing the `!livemountvmwarevm` command and providing the following arguments:
-    * `--vm` - (String, Required) The Virtual Machine you wish to Live Mount
-    * `--date` - (String, Optional) The date of the restore point you wish to Live Mount. By default the latest date will be utilized
-    * `--time` - (String, Optional) The time of the restore point on the specified date you wish to Live Mount. By default the latest time will be utilized.
-    * `--host` - (String, Optional) The name of IP Address of the ESXi host you wish to run the Live Mounted VM. By default, the host currently running the production VM will be utilized
-    * `--remove-network-devices` - (Boolean, Optional) - Whether you wish to remove the network devices from the Live Mounted VM. By default, this is set to False.
-    * `--power-on` - (Boolean, Optional) - Whether you wish to power on the Live Mounted VM. By default, this is set to True.
+* `--vm` - (String, Required) The Virtual Machine you wish to Live Mount
+* `--date` - (String, Optional) The date of the restore point you wish to Live Mount. By default the latest date will be utilized
+* `--time` - (String, Optional) The time of the restore point on the specified date you wish to Live Mount. By default the latest time will be utilized.
+* `--host` - (String, Optional) The name of IP Address of the ESXi host you wish to run the Live Mounted VM. By default, the host currently running the production VM will be utilized
+* `--remove-network-devices` - (Boolean, Optional) - Whether you wish to remove the network devices from the Live Mounted VM. By default, this is set to False.
+* `--power-on` - (Boolean, Optional) - Whether you wish to power on the Live Mounted VM. By default, this is set to True.
 
 For example, to Live Mount a VM named VM1 using all of the default parameter values the following command is issued:
 `!livemountvmwarevm --vm VM1`
