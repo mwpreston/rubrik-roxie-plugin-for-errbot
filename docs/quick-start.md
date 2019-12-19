@@ -1,3 +1,23 @@
+# Rubrik Plugin for Errbot with Mattermost Quickstart Guide
+
+* [`Introduction to the Rubrik Plugin for Errbot`](#Introduction-to-the-Rubrik-Plugin-for-Errbot)
+* ['Prerequisites](#Prerequisites)
+* [Installation](#Installation)
+    * [Automated](#Automated-Installation)
+    * [Manual](#Manual-Installation)
+        * [Installing Errbot](#Installing-Errbot)
+        * [Installing Rubrik Plugin for Errbot](#Installing-the-Rubrik-plugin-for-errbot)
+        * [Installing Mattermostdriver and Backend](#Installing-the-mattermostdriver-and-mattermost-backend-for-errbot)
+        * [Running the Errbot Instance](#Running-the-errbot-instance)
+* [Configuration](#Configure-the-rubrik-plugin-for-errbot)
+    * [Using Errbot CLI](#configuration-with-the-errbot-cli)
+    * [Using Mattermost bot](#configuration-through-mattermost-bot)
+* [Using the Rubrik Plugin for Errbot](#using-the-rubrik-plugin-for-errbot)
+* [Contributing](#contributing)
+    * [Creating new commands](#creating-new-commands)
+    * [Submitting through GitHub](#Submitting-through-github)
+* [Further Reading](#further-reading)
+
 # Introduction to the Rubrik Plugin for Errbot
 
 Errbot is a python based chatbot that connects to your favorite chat service and brings your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant into the fold. Utilizing the Rubrik Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collaboration platforms, granting end-users to chat or query the plugin in order to perform functions through simple conversation such as:
@@ -105,7 +125,7 @@ To confirm that the Rubrik Plugin for Errbot has been successfully loaded issue 
 
 This process ensures that our plugin is working, however configuration still needs to occur before it is able to connect to a Rubrik cluster. That said, even before configuration we need to get Errbot talking to Mattermost.
 
-### Installation of the mattermostdriver and Errbot for Mattermost Backend
+### Installing the mattermostdriver and Mattermost backend for Errbot
 
 In order for Mattermost to talk to Errbot and vice-versa we have to connect the two application utilizing a backend. A backend is simply a connector which leverages web hooks allowing communication to flow between Mattermost and Errbot. The following steps outline the installation and configuration for both the mattermostdriver and the backend:
 
@@ -414,7 +434,7 @@ def livemountvmwarevm(self,msg,vm,date,time,host,removenetworkdevices,poweron):
 * **Line 14** - We inform the user of the task status
 * **Line 16** - If any exceptions are raised, we inform the user of the exception message.
 
-## Contribuing new commands to the Rubrik Plugin for Errbot
+## Submitting through GitHub
 
 Contributions via GitHub pull requests are gladly accepted from their original author. Along with any pull requests, please state that the contribution is your original work and that you license the work to the project under the project's open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under hte project's open source license and warrant that you have the legal authority to do so.
 
