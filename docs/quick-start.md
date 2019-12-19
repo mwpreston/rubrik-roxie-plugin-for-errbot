@@ -16,9 +16,10 @@ The code assumes that you have already deployed at least one Rubrik cluster into
 
 The following software packages are prerequisites in order to support the Roxie Plugin for Errbot and Mattermost.
 
-1. Python3
-1. virtualenv
-1. git
+1. [Python3](https://www.python.org/download/releases/3.0/)
+1. [virtualenv](https://virtualenv.pypa.io/en/latest/)
+1. [git](https://git-scm.com/)
+1. [Mattermost CLI](https://docs.mattermost.com/administration/command-line-tools.html) - if using the automated installation method
 
 # Installation
 
@@ -43,7 +44,7 @@ For convenience we have developed a script which will automate all of the action
 To run an automated installation use the following steps:
 
 1. Download the automated script [here](/install/install.sh)
-1. Execute the script by running `./install.sh`
+1. Execute the script by running `./install.sh` **Script must be executed as root**
 1. The script will prompt for various bits of information including installation directories, Mattermost configuration, Rubrik configuration, and Bot configuration. Be sure to input everything correctly when prompted.
 1. Upon completion, Errbot, Mattermost Backend for Errbot, MattermostDriver, and the Rubrik Plugin for Errbot will be installed.
 1. A basic configuration based on inputs provided will be automatically applied during the script execution. If changes are required, more details around this can be found in the [`Configuring the Rubrik Plugin for Errbot`](#Configuring-the-Rubrik-Plugin-for-Errbot) section.
@@ -96,7 +97,7 @@ Errbot and the Rubrik Plugin for Errbot have now been successfully installed. We
 
 Errbot will now be started in text/developer mode. Here we can test that Errbot is responding by issuing the `!tryme` command, which in turn calls an example plugin which was loaded during the `errbot --init` process. A succesful Errbot installation will respond with 'It works !' as shown below:
 
-![](img/2019-12-11-11-45-19.png)
+![](img/itworks.png)
 
 To confirm that the Rubrik Plugin for Errbot has been successfully loaded issue the `!status plugins` command and search for the Rubrik plugin. A properly working pluging will have an 'A' displayed for its status to indicate it has been activated. The following illustrates a properly function Rubrik plugin:
 
@@ -307,6 +308,7 @@ An SLA Domain may be assigned to a VMware VM by issuing the `!assignslavmware` c
 * `--sla-domain` - (String, Required) The desired SLA Domain name to assign.
 
 For example, to assign a virtual machined named VM1 to an SLA Domain named Gold, the following command is issued:
+
 `!assignslavmware --vm VM1 --sla-domain Gold`
 
 The bot will in turn issue the commands to assign the SLA Domain to the virtual machine, and respond with a message outlining the result. Illustrated below are a few of the possible outcomes when assigning an SLA Domain:
@@ -320,8 +322,11 @@ The Rubrik Plugin for Errbot may be used to trigger on-demand snapshots of VMwar
 * `--sla-domain` - (String, Optional) the SLA Domain of which to apply to the backup. If no value is passed, the VMs currently assigned SLA Domain will be used.
 
 For example, to take an on demand snapshot of a VM named VM1 with the Gold SLA Domain the following command is issued:
+
 `!ondemandsnapshot --vm VM1 --sla-domain Gold`
+
 To take an on demand snapshot of the same VM with the currently assigned SLA Domain the following commmand is issued:
+
 `!ondemandsnapshot --vm VM1`
 
 The bot will in turn issue the commands to the Rubrik cluster to take the on-demand snapshot and respond with a message outlining the result. Illustrated below are a few of the possible outcomes when taking on-demand snapshots
@@ -339,8 +344,11 @@ The Rubrik Plugin for Errbot may be used to create Live Mounts of VMware VM back
 * `--power-on` - (Boolean, Optional) - Whether you wish to power on the Live Mounted VM. By default, this is set to True.
 
 For example, to Live Mount a VM named VM1 using all of the default parameter values the following command is issued:
+
 `!livemountvmwarevm --vm VM1`
+
 To live mount the same VM, this time removing the networking devices and running on a host named ESX02, the following command is issued:
+
 `!livemountvmwarevm --vm VM1 --host ESX02 --remove-network-devices True`
 
 The bot will in turn issue the commands to the Rubrik Cluster in order to perform the live mount and respond with a message outlining the result. Illustrated below are a few o the possible outcomes when live mounting VMware VMs with the Rubrik Plugin for Errbot
