@@ -444,7 +444,7 @@ If you have code or documentation changes you would like to submit as a pull req
 
 * Fork the master repository
 * Make changes either directly in the forked branch or create a new branch for hte changes you would like to submit for review
-* Create a Pull Request (PR) and fill out hte template, then submit the Pull Requests for review
+* Create a Pull Request (PR) and fill out the template, then submit the Pull Requests for review
 
 From this point onwards, your changes will be validated and in the pull request additional code might be pushed or code changes can be suggested. Make sure that you monitor your notifications.
 
