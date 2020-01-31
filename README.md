@@ -1,10 +1,10 @@
 # Rubrik Plugin for Errbot
 
-Errbot is a python based chatbot that connects to your favorite chat service and brings your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant into the fold. Utilizing the Rubrik Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collaboration platforms, granting end-users to chat or query the plugin in order to perform functions through simple conversation such as:
+Errbot is a Python-based chatbot that connects to your favorite chat service, bringing your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant, into the fold. Utilizing the Rubrik Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collaboration platforms, granting end-users the ability to chat or query the plugin in order to perform functions through simple conversation such as:
 
-- Assigning an SLA Domain to a Rubrik object
-- Taking an on-demand snapshot of a Virtual Machine
-- Performing a Live Mount of a Virtual Machine
+* Assigning an SLA Domain to a Rubrik object
+* Taking an on-demand snapshot of a Virtual Machine
+* Performing a Live Mount of a Virtual Machine
 
 The Rubrik Plugin for Errbot will interpret the natural conversation and perform the respective API calls to a Rubrik cluster in order to perform the requested functionality.
 
@@ -15,11 +15,11 @@ Here are some resources to get you started! If you find any challenges from this
 * [Quick Start Guide - Roxie, Errbot, and Mattermost](/docs/quick-start.md)
 * [Rubrik API Documentation](https://github.com/rubrikinc/api-documentation)
 
-# :white_check_mark: Prerequisites
+## :white_check_mark: Prerequisites
 
 There are a few services you'll need in order to get this project off the ground:
 
-* [Errbot](https://errbot.readthedocs.io/en/latest/) - without an actual Errbot installation we can't do much with a plugin
+* [Errbot](https://errbot.readthedocs.io/en/latest/) - the plugin requires the Errbot framework
 * Rubrik CDM 4.0 or later - the platform that protects provisioned workloads
 
 Depending on the chat/collaboration platform you intend to use additional plugins or connectors may be required. For example, using the Rubrik Plugin for Errbot with Mattermost additionally requires:
