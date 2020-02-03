@@ -1,4 +1,4 @@
-# Rubrik Plugin for Errbot with Mattermost Quickstart Guide
+# Quick Start Guide: Rubrik Plugin for Errbot with Mattermost
 
 * [Introduction to the Rubrik Plugin for Errbot](#Introduction-to-the-Rubrik-Plugin-for-Errbot)
 * [Prerequisites](#Prerequisites)
@@ -20,11 +20,11 @@
 
 # Introduction to the Rubrik Plugin for Errbot
 
-Errbot is a python based chatbot that connects to your favorite chat service and brings your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant into the fold. Utilizing the Rubrik Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collaboration platforms, granting end-users to chat or query the plugin in order to perform functions through simple conversation such as:
+Errbot is a Python-based chatbot that connects to your favorite chat service, bringing your tools into the conversation. This plug-in extends Errbot's architecture to bring Roxie, Rubrik's intelligent personal assistant, into the fold. Utilizing the Rubrik Plugin for Errbot allows organizations to integrate common cloud data management tasks into their preferred collaboration platforms, granting end-users the ability to chat or query the plugin in order to perform functions through simple conversation such as:
 
-- Assigning an SLA Domain to a Rubrik object
-- Taking an on-demand snapshot of a Virtual Machine
-- Performing a Live Mount of a Virtual Machine
+* Assigning an SLA Domain to a Rubrik object
+* Taking an on-demand snapshot of a Virtual Machine
+* Performing a Live Mount of a Virtual Machine
 
 The Rubrik Plugin for Errbot will interpret the passed commands and performs the respective API calls to a Rubrik cluster in order to carry out the requested functionality, while responding back to the users within the chat service.
 
@@ -43,7 +43,7 @@ The following software packages are prerequisites in order to support the Rubrik
 
 # Installation
 
-This guide will walk through the basic steps in order to get Errbot and the Rubrik Plugin for Errbot installed, configured, and connected to a Mattermost instance. For further information and more detailed installation instructions, refer to the [Official Errbot Documentation](http://errbot.io/en/latest/).
+This guide will walk through the basic steps in order to get Errbot and the Rubrik Plugin for Errbot installed, configured, and connected to a Mattermost instance. For more information, refer to the [Official Errbot Documentation](http://errbot.io/en/latest/).
 
 After completing this guide the following applications and packages will be installed:
 
@@ -53,11 +53,11 @@ After completing this guide the following applications and packages will be inst
 1. Rubrik SDK for Python
 1. Rubrik Plugin for Errbot
 
-Installation can be performed in two different manners; Automated or Manual, outlined below.
+Installation can be performed in one of two ways: Automated or Manual, outlined below.
 
 ## Automated Installation
 
-For convenience we have developed a script which will automate all of the actions performed in the Manual Installation section. 
+For convenience, a script has been developed that automates all of the actions performed in the Manual Installation section. 
 
 **Note: The automated installation only works when you wish to install all components on the same server which runs Mattermost.**
 
@@ -127,7 +127,7 @@ This process ensures that our plugin is working, however configuration still nee
 
 ### Installing the mattermostdriver and Mattermost backend for Errbot
 
-In order for Mattermost to talk to Errbot and vice-versa we have to connect the two application utilizing a backend. A backend is simply a connector which leverages web hooks allowing communication to flow between Mattermost and Errbot. The following steps outline the installation and configuration for both the mattermostdriver and the backend:
+In order for bi-directional communication between Mattermost and Errbot, a backend is required. A backend is simply a connector that leverages web hooks allowing communication to flow between Mattermost and Errbot. The following steps outline the installation and configuration for both the mattermostdriver and the backend:
 
 1. Install the mattermostdriver packages through pip. **Ensure the virtualenv for Errbot is still active**
 
@@ -137,7 +137,7 @@ In order for Mattermost to talk to Errbot and vice-versa we have to connect the 
 
     `git clone https://github.com/Vaelor/errbot-mattermost-backend.git /usr/share/errbot/mattermost`
 
-1. Use the Mattermost CLI to create a user to use as your bot. The user must be assigned the system admin role.  We like to call ours Roxie
+1. Use the Mattermost CLI to create a user to use as your bot. The user must be assigned the system admin role.  The Rubrik chatbot is named Roxie.
 
     `/opt/mattermost/bin/mattermost user create --email roxie@rubrik.us --username roxie --password SuperSecret123! --system_admin`
 
@@ -145,9 +145,9 @@ In order for Mattermost to talk to Errbot and vice-versa we have to connect the 
 
     **Optionally you may use the `Invite People` option from the main menu within your Teams Mattermost space.
 
-1.  Modify the `config.py` configuration file within the working directory (/usr/share/errbot/roxie if following along), pointing it to the mattermost backend and configuring the bot.
+1.  Modify the `config.py` configuration file within the working directory (/usr/share/errbot/roxie if following along), pointing it to the Mattermost backend and configuring the bot.
 
-    For example, we want to change the default `config.py` which looks something like this...
+    For example, if we want to change the default `config.py` then it may resemble:
     
     ```
     import logging
@@ -209,7 +209,7 @@ In order for Mattermost to talk to Errbot and vice-versa we have to connect the 
 
 We have now completed all of the installations required and can begin to run our Errbot instance.
 
-### Running the Errbot instance
+## Running the Errbot instance
 
 The Errbot instance, Mattermost Backend and Rubrik plugin are now ready to be started. To start Errbot with our desired configuration run the following command:
 
@@ -223,7 +223,7 @@ Passing the `-d` parameter to errbot will start the process in daemon (backgroun
 
 `source /usr/share/errbot/bin/activate && /usr/share/errbot/bin/errbot -d -c /usr/share/errbot/roxie/config.py`
 
-#### Configuring Errbot and Roxie to start on system boot
+## Configuring Errbot and Roxie to start on system boot
 
 The following will walk through how to setup the Roxie to start upon boot using systemd.
 
@@ -274,7 +274,7 @@ Errbot plugins can be configured either by using the `errbot` cli command or thr
 
 **NOTE: If the automated installation option was chosen, the Rubrik Plugin for Errbot will already be completed. There is no further configuration needed.**
 
-## Configuration with errbot cli
+## Configuring using the errbot CLI
 
 Adding the Rubrik Plugin for Errbot configuration can be accomplished by passing the desired API_Token and Node_IP JSON values through the --storage-merge parameter.
 
@@ -284,9 +284,9 @@ The following command can be used to configure the Rubrik Plugin for Errbot thro
 
 `echo "{'configs': {'Rubrik': {'API_TOKEN': '<Rubrik API Token>', 'NODE_IP': '<NODE IP TO USE>'}}}" | <path_to_errbot>/bin/errbot -c <path_to_errbot_config.py> --storage-merge core`
 
-Once errbot is started again commands to the bot can be issued.
+Once Errbot is started again commands to the bot can be issued.
 
-## Configuration through Mattermost bot
+## Configuring through Mattermost bot
 
 Errbots pluggable architecture allows the configuration of its' plugins to be performed within Errbot itself. For the sake of this guide, we will perform the configuration of the Rubrik Plugin for Errbot directly from within Mattermost through direct messages with our bot user. The following outlines how to configure the Rubrik Plugin for Errbot (within Mattermost):
 
@@ -321,9 +321,9 @@ To retrieve the software version of the currently connected Rubrik cluster, simp
 
 ![](img/softwareversion.png)
 
-**Assigning an SLA Domain to a VMware VM**
+**Assigning an SLA Domain to a vSphere VM**
 
-An SLA Domain may be assigned to a VMware VM by issuing the `!assignslavmware` command and providing values for the following 2 arguments:
+An SLA Domain may be assigned to a vSphere VM by issuing the `!assignslavmware` command and providing values for the following 2 arguments:
 * `--vm` - (String, Required) The virtual machine in which to assing the SLA Domain to.
 * `--sla-domain` - (String, Required) The desired SLA Domain name to assign.
 
@@ -335,7 +335,7 @@ The bot will in turn issue the commands to assign the SLA Domain to the virtual 
 
 ![](img/assignsla.png)
 
-**Performing an on-demand snapshot of a VMware VM**
+**Performing an on-demand snapshot of a vSphere VM**
 
 The Rubrik Plugin for Errbot may be used to trigger on-demand snapshots of VMware VMs by issuing the `!ondemandsnapshot` and providing the following arguments:
 * `--vm` - (String, Required) the virtual machine in which to perform the backup on
@@ -353,9 +353,9 @@ The bot will in turn issue the commands to the Rubrik cluster to take the on-dem
 
 ![](img/ondemandsnapshot.png)
 
-**Performing a Live Mount of a VMware VM**
+**Performing a Live Mount of a vSphere VM**
 
-The Rubrik Plugin for Errbot may be used to create Live Mounts of VMware VM backups by issuing the `!livemountvmwarevm` command and providing the following arguments:
+The Rubrik Plugin for Errbot may be used to create Live Mounts of vSphere VM backups by issuing the `!livemountvmwarevm` command and providing the following arguments:
 * `--vm` - (String, Required) The Virtual Machine you wish to Live Mount
 * `--date` - (String, Optional) The date of the restore point you wish to Live Mount. By default the latest date will be utilized
 * `--time` - (String, Optional) The time of the restore point on the specified date you wish to Live Mount. By default the latest time will be utilized.
@@ -367,11 +367,11 @@ For example, to Live Mount a VM named VM1 using all of the default parameter val
 
 `!livemountvmwarevm --vm VM1`
 
-To live mount the same VM, this time removing the networking devices and running on a host named ESX02, the following command is issued:
+To Live Mount the same VM, this time removing the networking devices and running on a host named ESX02, the following command is issued:
 
 `!livemountvmwarevm --vm VM1 --host ESX02 --remove-network-devices True`
 
-The bot will in turn issue the commands to the Rubrik Cluster in order to perform the live mount and respond with a message outlining the result. Illustrated below are a few o the possible outcomes when live mounting VMware VMs with the Rubrik Plugin for Errbot
+The bot will in turn issue the commands to the Rubrik Cluster in order to perform the Live Mount and respond with a message outlining the result. Illustrated below are a few of the possible outcomes when using Live Mount to recovoer a vSphere VM with the Rubrik Plugin for Errbot
 
 ![](img/livemount.png)
 
@@ -379,13 +379,13 @@ The bot will in turn issue the commands to the Rubrik Cluster in order to perfor
 
 We welcome any and all types of contributions to the Rubrik Plugin for Errbot, whether they be documentation updates or the creation of new functions and commands.
 
-## Creating new commands
+## Creating New Commands
 
 Creating new commands within the Rubrik Plugin for Errbot is as simple as creating a function within the `rubrik.py` file. The following will walk through a basic overview of how to create a new function. For more information and details, please see the [Errbot Developers Guide](https://errbot.readthedocs.io/en/latest/user_guide/plugin_development/).
 
 All new commands and functions should be placed in the `rubrik.py` file within the plugins/rubrik directory. Depending on whether the command will need to support arguments or not, it will follow one of the following formats:
 
-**Commands without arguments**
+**Commands Without Arguments**
 
 ```
 @botcmd
@@ -393,7 +393,7 @@ def commandname(self, msg, args):
     # Function Code
 ```
 
-**Commands supporting arguments**
+**Commands Supporting Arguments**
 
 ```
 @arg_botcmd('--arg1', dest='arg1',type=str)
@@ -434,11 +434,11 @@ def livemountvmwarevm(self,msg,vm,date,time,host,removenetworkdevices,poweron):
 * **Line 14** - We inform the user of the task status
 * **Line 16** - If any exceptions are raised, we inform the user of the exception message.
 
-## Submitting through GitHub
+## Contributions Using GitHub
 
 Contributions via GitHub pull requests are gladly accepted from their original author. Along with any pull requests, please state that the contribution is your original work and that you license the work to the project under the project's open source license. Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under hte project's open source license and warrant that you have the legal authority to do so.
 
-### Pull requests - Workflow
+### Pull Requests - Workflow
 
 If you have code or documentation changes you would like to submit as a pull request please,
 
